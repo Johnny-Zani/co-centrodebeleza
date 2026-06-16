@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C.O. Centro de Beleza</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:   #C9A96E;
+    --gold-lt:#E8D5B0;
+    --onyx:   #0D0D0D;
+    --dark:   #1A1A1A;
+    --mid:    #2C2C2C;
+    --warm:   #F7F3EE;
+    --text:   #3A3A3A;
+    --muted:  #888;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; letter-spacing: 3px;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 0.78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--onyx); background: var(--gold);
+    padding: 10px 22px; text-decoration: none;
+    transition: opacity .2s;
+  }
+  .nav-cta:hover { opacity: .85; }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--onyx);
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 60% 40%, rgba(201,169,110,0.12) 0%, transparent 65%),
+                radial-gradient(ellipse at 20% 80%, rgba(201,169,110,0.07) 0%, transparent 50%);
+  }
+  .hero-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(90deg, rgba(201,169,110,0.04) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(201,169,110,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content {
+    position: relative; text-align: center; padding: 0 24px;
+  }
+  .hero-eyebrow {
+    font-size: 0.68rem; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 300; line-height: .95;
+    color: #fff; margin-bottom: 8px;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--gold);
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 300; color: rgba(255,255,255,0.45);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 52px;
+  }
+  .hero-divider {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin: 0 auto 36px;
+  }
+  .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 14px 36px; background: var(--gold);
+    color: var(--onyx); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 500; transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: .85; }
+  .btn-ghost {
+    padding: 14px 36px; border: 1px solid rgba(201,169,110,0.4);
+    color: var(--gold); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: #fff; }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 48px; }
+  .section-eyebrow {
+    font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--onyx); margin-bottom: 16px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-desc {
+    font-size: 0.9rem; color: var(--muted); line-height: 1.8;
+    max-width: 500px;
+  }
+  .section-header { margin-bottom: 60px; }
+
+  /* ── PROFISSIONAIS ── */
+  #profissionais { background: var(--onyx); }
+  #profissionais .section-title { color: #fff; }
+  #profissionais .section-desc { color: rgba(255,255,255,0.4); }
+
+  .prof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    border: 1px solid rgba(201,169,110,0.15);
+  }
+  .prof-card {
+    padding: 32px 28px;
+    border: 1px solid rgba(201,169,110,0.08);
+    transition: background .2s;
+  }
+  .prof-card:hover { background: rgba(201,169,110,0.05); }
+  .prof-initial {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem; font-weight: 300; font-style: italic;
+    color: var(--gold); line-height: 1; margin-bottom: 12px;
+  }
+  .prof-name {
+    font-size: 0.85rem; font-weight: 500; color: #fff;
+    letter-spacing: 0.5px; margin-bottom: 8px;
+  }
+  .prof-role {
+    font-size: 0.72rem; color: rgba(255,255,255,0.35);
+    line-height: 1.6;
+  }
+
+  /* ── SERVIÇOS ── */
+  #servicos { background: var(--warm); }
+
+  .cat-block { margin-bottom: 72px; }
+  .cat-label {
+    font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    padding-bottom: 12px; border-bottom: 1px solid rgba(201,169,110,0.25);
+  }
+  .servico-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: rgba(201,169,110,0.12);
+  }
+  .servico-item {
+    background: var(--warm); padding: 24px 20px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 12px; transition: background .18s;
+  }
+  .servico-item:hover { background: #fff; }
+  .servico-nome {
+    font-size: 0.85rem; font-weight: 500; color: var(--onyx);
+    line-height: 1.4; margin-bottom: 4px;
+  }
+  .servico-detalhe {
+    font-size: 0.72rem; color: var(--muted); line-height: 1.5;
+  }
+  .servico-preco {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600; color: var(--gold);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .servico-preco small {
+    display: block; font-family: 'DM Sans', sans-serif;
+    font-size: 0.62rem; color: var(--muted); font-weight: 400;
+    text-align: right; margin-top: 2px;
+  }
+
+  /* ── NOIVA ── */
+  #noiva { background: var(--onyx); }
+  #noiva .section-title { color: #fff; }
+  #noiva .section-desc { color: rgba(255,255,255,0.4); }
+
+  .noiva-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .noiva-card {
+    border: 1px solid rgba(201,169,110,0.2);
+    padding: 40px 32px;
+    position: relative; overflow: hidden;
+    transition: border-color .2s;
+  }
+  .noiva-card:hover { border-color: var(--gold); }
+  .noiva-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .noiva-pacote {
+    font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+  }
+  .noiva-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem; font-weight: 300; color: #fff;
+    line-height: 1; margin-bottom: 28px;
+  }
+  .noiva-price span { font-size: 1rem; color: var(--gold); vertical-align: super; }
+  .noiva-items { list-style: none; }
+  .noiva-items li {
+    font-size: 0.8rem; color: rgba(255,255,255,0.55);
+    padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 10px; line-height: 1.4;
+  }
+  .noiva-items li::before {
+    content: ''; width: 5px; height: 1px;
+    background: var(--gold); flex-shrink: 0;
+  }
+
+  /* ── TRATAMENTOS DESTAQUE ── */
+  #tratamentos { background: #fff; }
+
+  .trat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .trat-card {
+    padding: 36px 30px;
+    border: 1px solid rgba(201,169,110,0.2);
+    position: relative;
+  }
+  .trat-tag {
+    display: inline-block;
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--onyx); background: var(--gold-lt);
+    padding: 4px 10px; margin-bottom: 20px;
+  }
+  .trat-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--onyx);
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .trat-desc {
+    font-size: 0.8rem; color: var(--muted); line-height: 1.75;
+    margin-bottom: 24px;
+  }
+  .trat-footer {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-top: 1px solid rgba(201,169,110,0.2); padding-top: 20px;
+  }
+  .trat-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; color: var(--gold);
+  }
+  .trat-sessoes {
+    font-size: 0.7rem; color: var(--muted); text-align: right;
+  }
+
+  /* ── INSTASTYLE ── */
+  #instagram {
+    background: var(--onyx); text-align: center; padding: 80px 48px;
+  }
+  #instagram .section-title { color: #fff; }
+  .insta-handle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-style: italic; color: var(--gold);
+    margin-top: 16px; text-decoration: none; display: block;
+    transition: opacity .2s;
+  }
+  .insta-handle:hover { opacity: .75; }
+
+  /* ── CTA FINAL ── */
+  #cta {
+    background: var(--gold); padding: 80px 48px; text-align: center;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300; color: var(--onyx); margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .cta-sub {
+    font-size: 0.85rem; color: rgba(13,13,13,0.6);
+    margin-bottom: 36px; line-height: 1.6;
+  }
+  .btn-dark {
+    display: inline-block;
+    padding: 16px 44px; background: var(--onyx);
+    color: var(--gold); text-decoration: none;
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 500; transition: opacity .2s;
+  }
+  .btn-dark:hover { opacity: .85; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080808; padding: 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .footer-copy {
+    font-size: 0.72rem; color: rgba(255,255,255,0.2);
+  }
+
+  /* ── DIVIDER ── */
+  .gold-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 72px 20px; }
+    footer { padding: 32px 20px; }
+    #instagram { padding: 60px 20px; }
+    #cta { padding: 60px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">C.O. Centro de Beleza</div>
+  <div class="nav-links">
+    <a href="#servicos">Serviços</a>
+    <a href="#tratamentos">Tratamentos</a>
+    <a href="#noiva">Noiva</a>
+    <a href="#profissionais">Equipe</a>
+  </div>
+  <a href="#cta" class="nav-cta">Agendar</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content reveal">
+    <p class="hero-eyebrow">@c.ocentrodebeleza</p>
+    <h1 class="hero-title">C.O.<br><em>Centro de</em><br>Beleza</h1>
+    <p class="hero-sub">Sofisticação · Cuidado · Elegância</p>
+    <div class="hero-divider"></div>
+    <div class="hero-btns">
+      <a href="#cta" class="btn-primary">Agendar Horário</a>
+      <a href="#servicos" class="btn-ghost">Ver Serviços</a>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- PROFISSIONAIS -->
+<section id="profissionais">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Nossa equipe</p>
+    <h2 class="section-title">Especialistas em<br><em>cada detalhe</em></h2>
+    <p class="section-desc">Cada profissional tem seu próprio ambiente e atende com dedicação exclusiva à sua transformação.</p>
+  </div>
+  <div class="prof-grid reveal">
+    <div class="prof-card">
+      <div class="prof-initial">C</div>
+      <div class="prof-name">Caroline Oliveira</div>
+      <div class="prof-role">Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar</div>
+    </div>
+    <div class="prof-card">
+      <div class="prof-initial">B</div>
+      <div class="prof-name">Bruna</div>
+      <div class="prof-role">Maquiadora · Design de Sobrancelha · Bronzeamento Artificial</div>
+    </div>
+    <div class="prof-card">
+      <div class="prof-initial">R</div>
+      <div class="prof-name">Rafaela</div>
+      <div class="prof-role">Cabelos · Maquiadora</div>
+    </div>
+    <div class="prof-card">
+      <div class="prof-initial">V</div>
+      <div class="prof-name">Vanessa</div>
+      <div class="prof-role">Manicure</div>
+    </div>
+    <div class="prof-card">
+      <div class="prof-initial">L</div>
+      <div class="prof-name">Letícia Unha</div>
+      <div class="prof-role">Manicure · Pedicure · Cabelo</div>
+    </div>
+    <div class="prof-card">
+      <div class="prof-initial">C</div>
+      <div class="prof-name">Cauane</div>
+      <div class="prof-role">Maquiadora</div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Cardápio de serviços</p>
+    <h2 class="section-title">Tudo que você<br><em>merece</em></h2>
+  </div>
+
+  <!-- MAQUIAGEM -->
+  <div class="cat-block reveal">
+    <p class="cat-label">Maquiagem</p>
+    <div class="servico-grid">
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Maquiagem Express</div>
+          <div class="servico-detalhe">Ideal para o dia a dia, reuniões e saídas rápidas</div>
+        </div>
+        <div class="servico-preco">R$ 100</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Maquiagem Glam</div>
+          <div class="servico-detalhe">Eventos sociais, festas e formaturas</div>
+        </div>
+        <div class="servico-preco">R$ 120</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Maquiagem Glamour</div>
+          <div class="servico-detalhe">Casamentos, eventos de gala e produções noturnas</div>
+        </div>
+        <div class="servico-preco">R$ 160</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESCOVAS E PENTEADOS -->
+  <div class="cat-block reveal">
+    <p class="cat-label">Escovas & Penteados</p>
+    <div class="servico-grid">
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Escova Lisa</div>
+          <div class="servico-detalhe">Alta definição, resultado impecável</div>
+        </div>
+        <div class="servico-preco">R$ 60</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Escova Enrolada</div>
+          <div class="servico-detalhe">Charme, delicadeza e presença</div>
+        </div>
+        <div class="servico-preco">R$ 80</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Escova Hollywoodiana</div>
+          <div class="servico-detalhe">Ondas marcantes · inclui Ozônioterapia</div>
+        </div>
+        <div class="servico-preco">R$ 100</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Penteados</div>
+          <div class="servico-detalhe">Tranças, semi preso, coque · consulte seu modelo</div>
+        </div>
+        <div class="servico-preco">a partir de<small>R$ 90</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLORAÇÃO E CABELO -->
+  <div class="cat-block reveal">
+    <p class="cat-label">Coloração & Cabelo</p>
+    <div class="servico-grid">
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Coloração Profissional</div>
+          <div class="servico-detalhe">1 sessão com finalização · diagnóstico capilar incluso</div>
+        </div>
+        <div class="servico-preco">R$ 150</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Corte com Visagismo</div>
+          <div class="servico-detalhe">Inclui ozônio e finalização</div>
+        </div>
+        <div class="servico-preco">R$ 150</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Combo Retoque Luzes</div>
+          <div class="servico-detalhe">Luzes · Matização · Tratamento L'ANZA · Ozônio · Corte · Finalização</div>
+        </div>
+        <div class="servico-preco">R$ 450</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Combo Luzes Cabelo Grande</div>
+          <div class="servico-detalhe">Teste de mechas · Luzes · Matização · L'ANZA · Ozônio · Corte · Make Básica · Finalização</div>
+        </div>
+        <div class="servico-preco">R$ 650</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Combo Morena Iluminada</div>
+          <div class="servico-detalhe">Consultoria de cor · Iluminado · Matização · Tratamento L'ANZA · Finalização</div>
+        </div>
+        <div class="servico-preco">R$ 500</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOBRANCELHAS -->
+  <div class="cat-block reveal">
+    <p class="cat-label">Sobrancelhas & Estética</p>
+    <div class="servico-grid">
+      <div class="servico-item">
+        <div><div class="servico-nome">Design sem Henna</div></div>
+        <div class="servico-preco">R$ 45</div>
+      </div>
+      <div class="servico-item">
+        <div><div class="servico-nome">Design com Henna</div></div>
+        <div class="servico-preco">R$ 55</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Spá das Sobrancelhas</div>
+          <div class="servico-detalhe">Esfoliação · Máscara de argila · Estimula o crescimento</div>
+        </div>
+        <div class="servico-preco">R$ 30</div>
+      </div>
+      <div class="servico-item">
+        <div><div class="servico-nome">Buço</div></div>
+        <div class="servico-preco">R$ 15</div>
+      </div>
+      <div class="servico-item">
+        <div>
+          <div class="servico-nome">Depilação Rosto</div>
+          <div class="servico-detalhe">Valor conforme quantidade de pelo</div>
+        </div>
+        <div class="servico-preco">a partir de<small>R$ 45</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- TRATAMENTOS -->
+<section id="tratamentos">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Protocolos exclusivos</p>
+    <h2 class="section-title">Tratamentos que<br><em>transformam</em></h2>
+    <p class="section-desc">Tecnologia de ponta com marcas premium. Cada protocolo é pensado para a saúde e beleza real dos seus fios.</p>
+  </div>
+  <div class="trat-grid">
+
+    <div class="trat-card reveal">
+      <span class="trat-tag">4 sessões</span>
+      <div class="trat-name">Protocolo Ozônioterapia</div>
+      <p class="trat-desc">Tratamento avançado que revitaliza os fios desde o couro cabeludo. Controla oleosidade, combate queda e estimula crescimento saudável.</p>
+      <div class="trat-footer">
+        <div class="trat-price">R$ 180</div>
+        <div class="trat-sessoes">o pacote<br>Avulsa: R$ 90</div>
+      </div>
+    </div>
+
+    <div class="trat-card reveal">
+      <span class="trat-tag">4 sessões · Wella</span>
+      <div class="trat-name">Protocolo Nutrição Wella</div>
+      <p class="trat-desc">Linha Nutri Invigo + Color. Nutrição profunda com reposição lipídica e proteica. Fios selados, sem frizz e cores mais vivas. Inclui ozônio.</p>
+      <div class="trat-footer">
+        <div class="trat-price">R$ 200</div>
+        <div class="trat-sessoes">o pacote<br>Avulsa c/ escova: R$ 90</div>
+      </div>
+    </div>
+
+    <div class="trat-card reveal">
+      <span class="trat-tag">4 sessões · Sebastian</span>
+      <div class="trat-name">Reconstrução Dark Oil Sebastian</div>
+      <p class="trat-desc">Óleos preciosos de argan e sândalo que reconstroem, nutrem e disciplinam os fios sem pesar. Brilho luxuoso e fragrância marcante.</p>
+      <div class="trat-footer">
+        <div class="trat-price">R$ 280</div>
+        <div class="trat-sessoes">o pacote<br>Avulsa: R$ 120</div>
+      </div>
+    </div>
+
+    <div class="trat-card reveal">
+      <span class="trat-tag">4 sessões · L'ANZA</span>
+      <div class="trat-name">Protocolo L'ANZA Keratin</div>
+      <p class="trat-desc">Queratina reparadora com blend de óleos terapêuticos. Reposição intensa, brilho radiante e proteção térmica. Ideal para cabelos quimicamente tratados.</p>
+      <div class="trat-footer">
+        <div class="trat-price">R$ 340</div>
+        <div class="trat-sessoes">o pacote<br>Avulsa: R$ 160</div>
+      </div>
+    </div>
+
+    <div class="trat-card reveal">
+      <span class="trat-tag">4 sessões · L'ANZA</span>
+      <div class="trat-name">Protocolo L'ANZA Ultimate</div>
+      <p class="trat-desc">Sistema inteligente de 3 passos adaptado à necessidade real dos fios: hidratação, nutrição ou reconstrução. Resultados visíveis desde a 1ª aplicação.</p>
+      <div class="trat-footer">
+        <div class="trat-price">R$ 380</div>
+        <div class="trat-sessoes">o pacote<br>Avulsa: R$ 180</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- NOIVA -->
+<section id="noiva">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Dia da Noiva</p>
+    <h2 class="section-title">O seu dia<br><em>mais especial</em></h2>
+    <p class="section-desc">Três pacotes pensados para que você viva cada momento com leveza, elegância e a beleza que sempre sonhou.</p>
+  </div>
+  <div class="noiva-grid">
+
+    <div class="noiva-card reveal">
+      <p class="noiva-pacote">Pacote 01 · Essencial</p>
+      <div class="noiva-price"><span>R$</span> 600</div>
+      <ul class="noiva-items">
+        <li>Make com Cílios</li>
+        <li>Design de Sobrancelha</li>
+        <li>Penteado com Preparação</li>
+        <li>Robe para uso no local</li>
+        <li>Colocação do vestido, véu e acessórios</li>
+        <li>Assessoria completa</li>
+      </ul>
+    </div>
+
+    <div class="noiva-card reveal">
+      <p class="noiva-pacote">Pacote 02 · Premium</p>
+      <div class="noiva-price"><span>R$</span> 1.200</div>
+      <ul class="noiva-items">
+        <li>Make com Cílios</li>
+        <li>Penteado com Preparação</li>
+        <li>Prévia da Make</li>
+        <li>Prévia do Penteado</li>
+        <li>Robe para uso no local</li>
+        <li>Design de Sobrancelha</li>
+        <li>Assessoria completa</li>
+        <li>Lanche leve</li>
+      </ul>
+    </div>
+
+    <div class="noiva-card reveal">
+      <p class="noiva-pacote">Pacote 03 · Luxo</p>
+      <div class="noiva-price"><span>R$</span> 1.600</div>
+      <ul class="noiva-items">
+        <li>Make com Cílios</li>
+        <li>Penteado com Preparação</li>
+        <li>Prévia da Make</li>
+        <li>Prévia do Penteado</li>
+        <li>Make e Penteado da Acompanhante</li>
+        <li>Robe para uso no local</li>
+        <li>Design de Sobrancelha</li>
+        <li>Spa dos pés</li>
+        <li>Limpeza de pele</li>
+        <li>Colocação de Vestido</li>
+        <li>Assessoria completa</li>
+        <li>Lanche leve</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- INSTAGRAM -->
+<section id="instagram">
+  <p class="section-eyebrow" style="color:var(--gold)">Siga no Instagram</p>
+  <h2 class="section-title" style="color:#fff; font-size:clamp(1.5rem,3vw,2.2rem); margin-bottom:8px;">
+    Acompanhe as transformações
+  </h2>
+  <a href="https://instagram.com/c.ocentrodebeleza" class="insta-handle" target="_blank">
+    @c.ocentrodebeleza
+  </a>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="cta-title">Pronta para a sua<br>transformação?</h2>
+  <p class="cta-sub">Agende pelo WhatsApp e garanta seu horário com a especialista ideal para você.</p>
+  <a href="https://wa.me/55" class="btn-dark">Agendar pelo WhatsApp</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">C.O. Centro de Beleza</div>
+  <div class="footer-copy">© 2026 C.O. Centro de Beleza · @c.ocentrodebeleza</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
