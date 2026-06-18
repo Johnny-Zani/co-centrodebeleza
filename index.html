@@ -434,8 +434,9 @@
   .servico-img {
     width: 100%;
     height: 260px;
-    object-fit: cover;
-    object-position: center 25%;
+    object-fit: contain;
+    object-position: center center;
+    background: #0f0f0f;
     display: block;
     transition: transform .4s ease;
   }
@@ -453,8 +454,9 @@
   .trat-img {
     width: 100%;
     height: 300px;
-    object-fit: cover;
-    object-position: center top;
+    object-fit: contain;
+    object-position: center center;
+    background: #0f0f0f;
     display: block;
     transition: transform .4s ease;
   }
@@ -466,8 +468,9 @@
   .noiva-img {
     width: 100%;
     height: 320px;
-    object-fit: cover;
-    object-position: center 15%;
+    object-fit: contain;
+    object-position: center center;
+    background: #0f0f0f;
     display: block;
     transition: transform .4s ease;
   }
@@ -476,23 +479,7 @@
   .noiva-card::before { z-index: 1; }
 
 
-  /* object-position por tratamento */
-  .trat-img[alt="Protocolo Ozônioterapia"]       { object-position: center 30%; }
-  .trat-img[alt="Protocolo Nutrição Wella"]       { object-position: center 25%; }
-  .trat-img[alt="Reconstrução Dark Oil Sebastian"]{ object-position: center 35%; }
-  .trat-img[alt="Protocolo L'ANZA Keratin"]      { object-position: center 20%; }
-  .trat-img[alt="Protocolo L'ANZA Ultimate"]     { object-position: center 25%; }
-
-  /* combos: mostrar mais o cabelo */
-  .servico-img[alt="Combo Retoque Luzes"]         { object-position: center 15%; }
-  .servico-img[alt="Combo Luzes Cabelo Grande"]   { object-position: center 10%; }
-  .servico-img[alt="Combo Morena Iluminada"]      { object-position: center 15%; }
-
-  /* escovas: focar no cabelo */
-  .servico-img[alt="Escova Lisa"]                 { object-position: center 10%; }
-  .servico-img[alt="Escova Enrolada"]             { object-position: center 10%; }
-  .servico-img[alt="Escova Hollywoodiana"]        { object-position: center 20%; }
-  .servico-img[alt="Penteados"]                   { object-position: center 15%; }
+  /* (regras de object-position específicas removidas — object-fit: contain mostra a foto inteira) */
 
 </style>
 </head>
