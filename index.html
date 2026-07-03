@@ -216,11 +216,25 @@
     transition: background .2s;
   }
   .prof-card:hover { background: rgba(201,169,110,0.05); }
+  .prof-card.has-photo { padding: 0 0 28px; }
+  .prof-photo-wrap {
+    width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
+    background: #0f0f0f; margin-bottom: 20px;
+  }
+  .prof-photo-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(15%);
+    transition: filter .3s, transform .5s;
+  }
+  .prof-card:hover .prof-photo-wrap img { filter: grayscale(0%); transform: scale(1.03); }
+  .prof-card.has-photo .prof-name,
+  .prof-card.has-photo .prof-role { padding: 0 28px; }
   .prof-initial {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.4rem; font-weight: 300; font-style: italic;
     color: var(--gold); line-height: 1; margin-bottom: 12px;
   }
+  .prof-card.has-photo .prof-initial { display: none; }
   .prof-name {
     font-size: 0.85rem; font-weight: 500; color: #fff;
     letter-spacing: 0.5px; margin-bottom: 8px;
@@ -537,12 +551,14 @@
       <div class="prof-name">Caroline O. Georgiuti</div>
       <div class="prof-role">Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar</div>
     </div>
-    <div class="prof-card">
+    <div class="prof-card has-photo">
+      <div class="prof-photo-wrap"><img src="images/bruna-vital.jpg" alt="Bruna Vital - Maquiadora e Designer de Sobrancelhas" loading="lazy"></div>
       <div class="prof-initial">B</div>
       <div class="prof-name">Bruna Vital</div>
       <div class="prof-role">Maquiadora · Design de Sobrancelha · Bronzeamento Artificial</div>
     </div>
-    <div class="prof-card">
+    <div class="prof-card has-photo">
+      <div class="prof-photo-wrap"><img src="images/rafaela-reis.jpg" alt="Rafaela Reis - Cabeleireira e Maquiadora" loading="lazy"></div>
       <div class="prof-initial">R</div>
       <div class="prof-name">Rafaela Reis</div>
       <div class="prof-role">Cabelos · Maquiadora</div>
@@ -552,7 +568,8 @@
       <div class="prof-name">Vanessa Lobato</div>
       <div class="prof-role">Manicure</div>
     </div>
-    <div class="prof-card">
+    <div class="prof-card has-photo">
+      <div class="prof-photo-wrap"><img src="images/leticia-santos.jpg" alt="Letícia Santos - Manicure e Pedicure" loading="lazy"></div>
       <div class="prof-initial">L</div>
       <div class="prof-name">Letícia Santos</div>
       <div class="prof-role">Manicure · Pedicure · Cabelo</div>
