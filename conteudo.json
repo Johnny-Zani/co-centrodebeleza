@@ -1,0 +1,69 @@
+{
+  "salao": {
+    "whatsapp": "",
+    "endereco": "",
+    "horarios": "",
+    "instagram": "c.ocentrodebeleza"
+  },
+  "profissionais": [
+    { "id": "caroline", "nome": "Caroline Giorgiutti", "funcao": "Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar", "foto": null },
+    { "id": "bruna", "nome": "Bruna Vital", "funcao": "Maquiadora · Design de Sobrancelha · Bronzeamento Artificial", "foto": "fotos/bruna-vital.jpg" },
+    { "id": "rafaela", "nome": "Rafaela Reis", "funcao": "Cabelos · Maquiadora", "foto": "fotos/rafaela-reis.jpg" },
+    { "id": "leticia", "nome": "Letícia Marquezam", "funcao": "Manicure · Pedicure · Cabelo", "foto": "fotos/leticia-santos.jpg" },
+    { "id": "cauane", "nome": "Cauane Carvalho", "funcao": "Maquiadora", "foto": null }
+  ],
+  "categorias": [
+    {
+      "nome": "Maquiagem",
+      "servicos": [
+        { "id": "maquiagem-express", "nome": "Maquiagem Express", "detalhe": "Ideal para o dia a dia, reuniões e saídas rápidas", "preco": 100, "foto": "fotos/maquiagem-express.jpg" },
+        { "id": "maquiagem-glam", "nome": "Maquiagem Glam", "detalhe": "Eventos sociais, festas e formaturas", "preco": 120, "foto": "fotos/maquiagem-glam.jpg" },
+        { "id": "maquiagem-glamour", "nome": "Maquiagem Glamour", "detalhe": "Casamentos, eventos de gala e produções noturnas", "preco": 160, "foto": "fotos/maquiagem-glamour.jpg" }
+      ]
+    },
+    {
+      "nome": "Escovas & Penteados",
+      "servicos": [
+        { "id": "escova-lisa", "nome": "Escova Lisa", "detalhe": "Alta definição, resultado impecável", "preco": 80, "foto": "fotos/escova-lisa.jpg" },
+        { "id": "escova-enrolada", "nome": "Escova Enrolada", "detalhe": "Charme, delicadeza e presença", "preco": 100, "foto": "fotos/escova-enrolada.jpg" },
+        { "id": "escova-hollywoodiana", "nome": "Escova Hollywoodiana", "detalhe": "Ondas marcantes · inclui Ozônioterapia", "preco": 100, "foto": "fotos/escova-hollywoodiana.jpg" },
+        { "id": "trancas", "nome": "Tranças", "detalhe": "Consulte o valor do seu modelo", "preco": 120, "foto": "fotos/trancas.jpg" },
+        { "id": "semi-preso", "nome": "Semi Preso", "detalhe": "Consulte o valor do seu modelo", "preco": 140, "foto": "fotos/semi-preso.jpg" },
+        { "id": "coque", "nome": "Coque", "detalhe": "Consulte o valor do seu modelo", "preco": 160, "foto": "fotos/coque.jpg" },
+        { "id": "semi-preso-torcido", "nome": "Semi Preso Torcido ou Rabo", "detalhe": "Consulte o valor do seu modelo", "preco": 160, "foto": "fotos/semi-preso-torcido-rabo.jpg" }
+      ]
+    },
+    {
+      "nome": "Coloração & Cabelo",
+      "servicos": [
+        { "id": "coloracao-profissional", "nome": "Coloração Profissional", "detalhe": "1 sessão com finalização · diagnóstico capilar incluso", "preco": 150, "foto": "fotos/coloracao-profissional.jpg" },
+        { "id": "corte-visagismo", "nome": "Corte com Visagismo", "detalhe": "Inclui ozônio e finalização", "preco": 150, "foto": "fotos/corte-visagismo.jpg" },
+        { "id": "combo-retoque-curto", "nome": "Combo Retoque Cabelo Curto", "detalhe": "Luzes · Matização · Tratamento L'ANZA · Ozônio · Corte · Finalização", "preco": 450, "foto": "fotos/combo-retoque-luzes.jpg" },
+        { "id": "combo-luzes-grande", "nome": "Combo Luzes Cabelo Grande", "detalhe": "Teste de mechas · Luzes · Matização · L'ANZA · Ozônio · Corte · Make Básica · Finalização", "preco": 650, "foto": "fotos/combo-luzes-cabelo-grande.jpg" },
+        { "id": "combo-morena-iluminada", "nome": "Combo Morena Iluminada", "detalhe": "Consultoria de cor · Iluminado · Matização · Tratamento L'ANZA · Finalização", "preco": 500, "foto": "fotos/combo-morena-iluminada.jpg" }
+      ]
+    },
+    {
+      "nome": "Sobrancelhas & Estética",
+      "servicos": [
+        { "id": "design-sem-henna", "nome": "Design sem Henna", "detalhe": null, "preco": 45, "foto": "fotos/design-sem-henna.jpg" },
+        { "id": "design-com-henna", "nome": "Design com Henna", "detalhe": null, "preco": 55, "foto": "fotos/design-com-henna.jpg" },
+        { "id": "spa-sobrancelhas", "nome": "Spá das Sobrancelhas", "detalhe": "Esfoliação · Máscara de argila · Estimula o crescimento", "preco": 30, "foto": null },
+        { "id": "buco", "nome": "Buço", "detalhe": null, "preco": 15, "foto": null },
+        { "id": "depilacao-rosto", "nome": "Depilação Rosto", "detalhe": "Valor conforme quantidade de pelo", "preco": 45, "foto": null }
+      ]
+    }
+  ],
+  "tratamentos": [
+    { "id": "protocolo-ozonio", "nome": "Protocolo Ozônioterapia", "tag": "4 sessões", "detalhe": "Tratamento avançado que revitaliza os fios desde o couro cabeludo. Controla oleosidade, combate queda e estimula crescimento saudável.", "preco": 180, "preco_avulsa": 90, "avulsa_label": "Avulsa", "foto": "fotos/protocolo-ozonioterapia.jpg" },
+    { "id": "protocolo-wella", "nome": "Protocolo Nutrição Wella", "tag": "4 sessões · Wella", "detalhe": "Linha Nutri Invigo + Color. Nutrição profunda com reposição lipídica e proteica. Fios selados, sem frizz e cores mais vivas. Inclui ozônio.", "preco": 200, "preco_avulsa": 90, "avulsa_label": "Avulsa c/ escova", "foto": "fotos/protocolo-nutricao-wella.jpg" },
+    { "id": "protocolo-dark-oil", "nome": "Reconstrução Dark Oil Sebastian", "tag": "4 sessões · Sebastian", "detalhe": "Óleos preciosos de argan e sândalo que reconstroem, nutrem e disciplinam os fios sem pesar. Brilho luxuoso e fragrância marcante.", "preco": 280, "preco_avulsa": 120, "avulsa_label": "Avulsa", "foto": "fotos/protocolo-dark-oil-sebastian.jpg" },
+    { "id": "protocolo-lanza-keratin", "nome": "Protocolo L'ANZA Keratin", "tag": "4 sessões · L'ANZA", "detalhe": "Queratina reparadora com blend de óleos terapêuticos. Reposição intensa, brilho radiante e proteção térmica. Ideal para cabelos quimicamente tratados.", "preco": 340, "preco_avulsa": 160, "avulsa_label": "Avulsa", "foto": "fotos/protocolo-lanza-keratin.jpg" },
+    { "id": "protocolo-lanza-ultimate", "nome": "Protocolo L'ANZA Ultimate", "tag": "4 sessões · L'ANZA", "detalhe": "Sistema inteligente de 3 passos adaptado à necessidade real dos fios: hidratação, nutrição ou reconstrução. Resultados visíveis desde a 1ª aplicação.", "preco": 380, "preco_avulsa": 180, "avulsa_label": "Avulsa", "foto": "fotos/protocolo-lanza-ultimate.jpg" }
+  ],
+  "noiva": [
+    { "id": "noiva-essencial", "nome": "Pacote 01 · Essencial", "preco": 600, "foto": null, "itens": ["Make com Cílios", "Design de Sobrancelha", "Penteado com Preparação", "Robe para uso no local", "Colocação do vestido, véu e acessórios", "Assessoria completa"] },
+    { "id": "noiva-premium", "nome": "Pacote 02 · Premium", "preco": 1200, "foto": null, "itens": ["Make com Cílios", "Penteado com Preparação", "Prévia da Make", "Prévia do Penteado", "Robe para uso no local", "Design de Sobrancelha", "Assessoria completa", "Lanche leve"] },
+    { "id": "noiva-luxo", "nome": "Pacote 03 · Luxo", "preco": 1600, "foto": null, "itens": ["Make com Cílios", "Penteado com Preparação", "Prévia da Make", "Prévia do Penteado", "Make e Penteado da Acompanhante", "Robe para uso no local", "Design de Sobrancelha", "Spa dos pés", "Limpeza de pele", "Colocação de Vestido", "Assessoria completa", "Lanche leve"] }
+  ]
+}
