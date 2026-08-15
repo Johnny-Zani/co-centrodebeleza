@@ -23,7 +23,7 @@ test('conteúdo válido não produz erro', () => {
 
 test('id repetido entre listas diferentes é erro', () => {
   const c = conteudoMinimo();
-  c.tratamentos.push({ id: 'maquiagem-glam', nome: 'Colisão', detalhe: null, preco: 10, preco_avulsa: null, tag: '', foto: null });
+  c.tratamentos.push({ id: 'maquiagem-glam', nome: 'Colisão', detalhe: null, preco: 10, preco_avulsa: 5, tag: '', foto: null });
   const erros = validar(c, existeSempre);
   assert.equal(erros.length, 1);
   assert.match(erros[0], /maquiagem-glam/);
@@ -40,6 +40,22 @@ test('preço zero ou negativo é erro', () => {
   const c = conteudoMinimo();
   c.categorias[0].servicos[0].preco = 0;
   assert.equal(validar(c, existeSempre).length, 1);
+});
+
+test('tratamento com preco_avulsa inválido é erro', () => {
+  const c = conteudoMinimo();
+  c.tratamentos.push({ id: 'trat-1', nome: 'Protocolo X', detalhe: null, preco: 100, preco_avulsa: 'grátis', tag: '', foto: null });
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /avulso/i);
+});
+
+test('tratamento com preco_avulsa zero ou negativo é erro', () => {
+  const c = conteudoMinimo();
+  c.tratamentos.push({ id: 'trat-2', nome: 'Protocolo Y', detalhe: null, preco: 100, preco_avulsa: 0, tag: '', foto: null });
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /avulso/i);
 });
 
 test('foto apontando para arquivo inexistente é erro', () => {

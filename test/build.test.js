@@ -36,6 +36,13 @@ test('todo preço aparece com "a partir de"', () => {
   const valores = html.split('R$').length - 1;
   const prefixos = html.split('a partir de').length - 1;
   assert.equal(prefixos, valores, 'existe preço sem o prefixo "a partir de"');
+
+  // Contagem balanceada (0 === 0) não pega regressão de preco() virando ''.
+  // Piso derivado dos dados: 1 preço por serviço, 2 por tratamento (preco +
+  // preco_avulsa), 1 por pacote de noiva.
+  const servicos = conteudo.categorias.flatMap(c => c.servicos).length;
+  const piso = servicos + conteudo.tratamentos.length * 2 + conteudo.noiva.length;
+  assert.ok(valores >= piso, `esperava pelo menos ${piso} preços, achei ${valores}`);
 });
 
 test('as fotos são copiadas para public/', () => {
@@ -51,4 +58,26 @@ test('o build falha quando o conteudo.json é inválido', () => {
       env: { ...process.env, CONTEUDO: 'test/fixtures/invalido.json' }
     });
   });
+});
+
+test('"$`", "$&" e "$\'" num detalhe não corrompem o HTML gerado', () => {
+  // String.prototype.replace() dá significado especial a $&, $`, $' e $$ na
+  // STRING DE SUBSTITUIÇÃO. O conteúdo das seções vem de conteudo.json, que a
+  // Carol edita pelo admin — um "$&"/"$'"/"$`" nesse texto não pode reinjetar
+  // o marcador nem duplicar o resto do template no HTML final.
+  //
+  // esc() já rodou sobre o detalhe antes desse texto virar "replacement
+  // string": "&" e "'" saem como entidades (&amp;, &#39;) e "`" sai como
+  // está (esc não mexe em crase). É essa forma escapada que precisa
+  // sobreviver intacta — ela é o texto real que chega ao replace().
+  execFileSync('node', ['build.js'], {
+    stdio: 'pipe',
+    env: { ...process.env, CONTEUDO: 'test/fixtures/caracteres-especiais.json' }
+  });
+  const saida = readFileSync('public/index.html', 'utf8');
+
+  assert.ok(saida.includes('Combo $` completo $&amp; com desconto $&#39; hoje'),
+    'o detalhe com "$`"/"$&"/"$\'" saiu corrompido ou incompleto do build');
+  assert.ok(!saida.includes('{{'), 'marcador reapareceu na saída (reinjetado via padrão "$")');
+  assert.equal((saida.match(/<footer>/g) ?? []).length, 1, 'footer duplicado (template reinjetado via padrão "$")');
 });

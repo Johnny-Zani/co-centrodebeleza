@@ -29,6 +29,17 @@ export function validar(conteudo, arquivoExiste) {
       }
     }
 
+    // Só tratamento tem preco_avulsa (a sessão avulsa do pacote). Sem essa
+    // checagem, um valor ausente ou digitado errado publica "a partir de
+    // R$ NaN" no site com o build passando.
+    if (tipo === 'tratamento') {
+      if (typeof item.preco_avulsa !== 'number' || Number.isNaN(item.preco_avulsa)) {
+        erros.push(`${tipo} "${item.id}": preço avulso precisa ser número, veio ${JSON.stringify(item.preco_avulsa)}`);
+      } else if (item.preco_avulsa <= 0) {
+        erros.push(`${tipo} "${item.id}": preço avulso precisa ser maior que zero`);
+      }
+    }
+
     if (item.foto !== null && item.foto !== undefined) {
       if (!arquivoExiste(item.foto)) {
         erros.push(`${tipo} "${item.id}": foto "${item.foto}" não existe no disco`);

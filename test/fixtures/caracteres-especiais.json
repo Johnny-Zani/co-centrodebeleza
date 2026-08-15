@@ -1,0 +1,14 @@
+{
+  "salao": { "whatsapp": "", "endereco": "", "horarios": "", "instagram": "" },
+  "profissionais": [],
+  "categorias": [
+    {
+      "nome": "Teste",
+      "servicos": [
+        { "id": "servico-especial", "nome": "Serviço com Caracteres Especiais", "detalhe": "Combo $` completo $& com desconto $' hoje", "preco": 50, "foto": null }
+      ]
+    }
+  ],
+  "tratamentos": [],
+  "noiva": []
+}

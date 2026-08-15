@@ -24,13 +24,19 @@ if (!conteudo.salao.whatsapp) {
   console.warn('\n⚠  ' + aviso + '\n');
 }
 
+// Forma-função no replace: o conteúdo de cada seção vem de conteudo.json,
+// que a Carol vai editar pelo admin numa task futura. Se algum texto dela
+// tiver "$&", "$'", "$`" ou "$$", o replace normal interpretaria isso como
+// padrão de substituição e corromperia o HTML gerado (duplicando o resto do
+// template ou reinjetando o marcador). A forma-função trata o retorno como
+// string literal, sem interpretar "$".
 const html = readFileSync('template.html', 'utf8')
-  .replace('<!--{{META}}-->', '')
-  .replace('<!--{{PROFISSIONAIS}}-->', secaoProfissionais(conteudo))
-  .replace('<!--{{SERVICOS}}-->', secaoServicos(conteudo))
-  .replace('<!--{{TRATAMENTOS}}-->', secaoTratamentos(conteudo))
-  .replace('<!--{{NOIVA}}-->', secaoNoiva(conteudo))
-  .replace('<!--{{CTA}}-->', secaoCta(conteudo));
+  .replace('<!--{{META}}-->', () => '')
+  .replace('<!--{{PROFISSIONAIS}}-->', () => secaoProfissionais(conteudo))
+  .replace('<!--{{SERVICOS}}-->', () => secaoServicos(conteudo))
+  .replace('<!--{{TRATAMENTOS}}-->', () => secaoTratamentos(conteudo))
+  .replace('<!--{{NOIVA}}-->', () => secaoNoiva(conteudo))
+  .replace('<!--{{CTA}}-->', () => secaoCta(conteudo));
 
 rmSync('public', { recursive: true, force: true });
 mkdirSync('public', { recursive: true });
