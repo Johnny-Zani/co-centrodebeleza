@@ -55,6 +55,19 @@
     transition: opacity .2s;
   }
   .nav-cta:hover { opacity: .85; }
+  .nav-toggle {
+    display: none;
+    background: none; border: 0; cursor: pointer;
+    padding: 8px; margin-left: auto; margin-right: 14px;
+  }
+  .nav-toggle span {
+    display: block; width: 22px; height: 1.5px;
+    background: var(--gold); margin: 4px 0;
+    transition: transform .25s, opacity .25s;
+  }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
   /* ── HERO ── */
   #hero {
@@ -385,7 +398,20 @@
 
   @media (max-width: 768px) {
     nav { padding: 16px 20px; }
-    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-links {
+      display: flex; flex-direction: column; gap: 0;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: rgba(13,13,13,0.98);
+      backdrop-filter: blur(10px);
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease;
+    }
+    .nav-links.aberto { max-height: 320px; }
+    .nav-links a {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(201,169,110,0.12);
+    }
     section { padding: 72px 20px; }
     footer { padding: 32px 20px; }
     #instagram { padding: 60px 20px; }
@@ -494,12 +520,15 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">C.O. Centro de Beleza</div>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-links">
     <a href="#servicos">Serviços</a>
     <a href="#tratamentos">Tratamentos</a>
     <a href="#noiva">Noiva</a>
     <a href="#profissionais">Equipe</a>
   </div>
+  <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
   <a href="#cta" class="nav-cta">Agendar</a>
 </nav>
 
@@ -587,6 +616,18 @@
     });
   }, { threshold: 0.08 });
   els.forEach(el => io.observe(el));
+
+  const toggle = document.querySelector('.nav-toggle');
+  const menu = document.getElementById('nav-links');
+  toggle.addEventListener('click', () => {
+    const aberto = menu.classList.toggle('aberto');
+    toggle.setAttribute('aria-expanded', String(aberto));
+    toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('aberto');
+    toggle.setAttribute('aria-expanded', 'false');
+  }));
 </script>
 </body>
 </html>
