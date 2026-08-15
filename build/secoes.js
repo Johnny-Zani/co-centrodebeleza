@@ -19,7 +19,7 @@ function preco(valor) {
 
 export function secaoProfissionais(c) {
   const cards = c.profissionais.map(p => `
-    <div class="prof-card${p.foto ? ' has-photo' : ''}">
+    <div class="prof-card${p.foto ? ' tem-foto' : ''}">
       ${moldura(p.foto, p.nome)}
       ${p.foto ? '' : `<div class="prof-initial">${esc(p.nome[0])}</div>`}
       <div class="prof-name">${esc(p.nome)}</div>
