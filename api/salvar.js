@@ -43,9 +43,16 @@ export default async function handler(req, res) {
     conteudoBase64: Buffer.from(JSON.stringify(conteudo, null, 2)).toString('base64')
   }];
 
+  if (!Array.isArray(fotos ?? [])) {
+    return res.status(400).json({ ok: false, erro: 'Formato de fotos inválido' });
+  }
+
   for (const foto of fotos ?? []) {
+    if (!foto || typeof foto.caminho !== 'string' || typeof foto.base64 !== 'string') {
+      return res.status(400).json({ ok: false, erro: 'Foto com formato inválido' });
+    }
     if (!/^fotos\/[a-z0-9-]+\.jpg$/.test(foto.caminho)) {
-      return res.status(400).json({ ok: false, erro: `Caminho de foto inválido: ${foto.caminho}` });
+      return res.status(400).json({ ok: false, erro: 'Caminho de foto inválido' });
     }
     arquivos.push({ caminho: foto.caminho, conteudoBase64: foto.base64 });
   }

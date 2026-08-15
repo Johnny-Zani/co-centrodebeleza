@@ -62,4 +62,15 @@ test('um único commit para vários arquivos', async () => {
   assert.equal(criacoesDeCommit.length, 1);
   const arvores = fetch.chamadas.filter(c => c.url.endsWith('/git/trees'));
   assert.equal(arvores[0].corpo.tree.length, 3);
+
+  // A tree precisa herdar os arquivos não alterados via base_tree — sem isso,
+  // um publish apaga todo o resto do repositório.
+  assert.equal(arvores[0].corpo.base_tree, 'tree-base');
+  // O commit precisa apontar para o commit anterior, senão vira um commit órfão.
+  assert.deepEqual(criacoesDeCommit[0].corpo.parents, ['sha-base']);
+  // A branch precisa realmente ser movida para o novo commit — sem isso,
+  // a função devolve sucesso mas nada é publicado.
+  const refs = fetch.chamadas.filter(c => c.url.includes('/git/refs/heads/'));
+  assert.equal(refs.length, 1);
+  assert.equal(refs[0].corpo.sha, 'commit-novo');
 });
