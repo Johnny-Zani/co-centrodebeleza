@@ -1,9 +1,11 @@
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { validar } from './build/validar.js';
 import { secaoProfissionais, secaoServicos, secaoTratamentos, secaoNoiva, secaoCta } from './build/secoes.js';
+import { metaTags } from './build/meta.js';
 
 const ARQUIVO = process.env.CONTEUDO ?? 'conteudo.json';
 const PRODUCAO = process.argv.includes('--producao');
+const URL_BASE = process.env.URL_BASE ?? 'https://co-centrodebeleza.vercel.app';
 
 const conteudo = JSON.parse(readFileSync(ARQUIVO, 'utf8'));
 
@@ -31,7 +33,7 @@ if (!conteudo.salao.whatsapp) {
 // template ou reinjetando o marcador). A forma-função trata o retorno como
 // string literal, sem interpretar "$".
 const html = readFileSync('template.html', 'utf8')
-  .replace('<!--{{META}}-->', () => '')
+  .replace('<!--{{META}}-->', () => metaTags(conteudo, URL_BASE))
   .replace('<!--{{PROFISSIONAIS}}-->', () => secaoProfissionais(conteudo))
   .replace('<!--{{SERVICOS}}-->', () => secaoServicos(conteudo))
   .replace('<!--{{TRATAMENTOS}}-->', () => secaoTratamentos(conteudo))
