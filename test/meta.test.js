@@ -39,11 +39,35 @@ test('tem dados estruturados de HairSalon', () => {
   assert.equal(dados.makesOffer.length, 20);
 });
 
-test('endereço e horário entram nos dados estruturados quando existem', () => {
+test('endereço, horário e telefone entram nos dados estruturados quando existem', () => {
   const c = structuredClone(conteudo);
   c.salao.endereco = 'Rua Exemplo, 123 — Centro';
   c.salao.horarios = 'Seg a Sáb, 9h às 19h';
+  c.salao.whatsapp = '5511999998888';
   const dados = JSON.parse(metaTags(c, 'https://x.com').match(/ld\+json">([\s\S]*?)<\/script>/)[1]);
   assert.equal(dados.address.streetAddress, 'Rua Exemplo, 123 — Centro');
   assert.equal(dados.openingHours, 'Seg a Sáb, 9h às 19h');
+  assert.equal(dados.telephone, '+5511999998888');
+});
+
+test('um "</script" dentro de um nome de serviço não fecha o bloco ld+json prematuramente', () => {
+  const c = structuredClone(conteudo);
+  c.categorias = [{
+    nome: 'Teste',
+    servicos: [{
+      id: 'teste',
+      nome: '</script><img onerror=x>',
+      detalhe: null,
+      preco: 10,
+      foto: null
+    }]
+  }];
+  const html = metaTags(c, 'https://x.com');
+
+  const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(m, 'o bloco ld+json precisa continuar sendo encontrado inteiro, sem cortar no meio');
+  assert.ok(!m[1].includes('</script'), 'o conteúdo serializado não pode conter "</script" literal');
+
+  const dados = JSON.parse(m[1]);
+  assert.equal(dados.makesOffer[0].name, '</script><img onerror=x>');
 });

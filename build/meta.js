@@ -36,6 +36,15 @@ export function metaTags(conteudo, urlBase) {
   if (conteudo.salao.horarios) dados.openingHours = conteudo.salao.horarios;
   if (conteudo.salao.whatsapp) dados.telephone = '+' + conteudo.salao.whatsapp;
 
+  // Escapamos "<" para "\u003c" antes de injetar no <script>: JSON.stringify
+  // escapa " e \ (deixando JSON válido), mas nunca escapa "/". Um nome de
+  // serviço ou campo do salão contendo o literal "</script" fecharia a tag
+  // prematuramente para o parser de HTML, mesmo com JSON perfeitamente
+  // válido — o parser de HTML nem olha para a sintaxe JSON. \u003c é um
+  // escape válido de string JSON para "<", então o payload continua sendo
+  // JSON-LD válido para qualquer consumidor, só fica inerte para o HTML.
+  // Esses campos (nome de serviço, endereço, horários) são editados pela
+  // Carol no painel admin a partir da Tarefa 9 — não podem quebrar o site.
   return `
 <meta name="description" content="${esc(DESCRICAO)}">
 <link rel="icon" href="fotos/logo.png" type="image/png">
@@ -49,5 +58,5 @@ export function metaTags(conteudo, urlBase) {
 <meta property="og:url" content="${esc(urlBase)}">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">${JSON.stringify(dados, null, 2)}</script>`;
+<script type="application/ld+json">${JSON.stringify(dados, null, 2).replace(/</g, '\\u003c')}</script>`;
 }
