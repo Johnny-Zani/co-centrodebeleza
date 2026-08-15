@@ -1,0 +1,7 @@
+{
+  "salao": { "whatsapp": "", "endereco": "", "horarios": "", "instagram": "" },
+  "profissionais": [],
+  "categorias": [{ "nome": "X", "servicos": [{ "id": "a", "nome": "A", "detalhe": null, "preco": "cento e vinte", "foto": null }] }],
+  "tratamentos": [],
+  "noiva": []
+}
