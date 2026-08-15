@@ -354,6 +354,10 @@
     font-weight: 500; transition: opacity .2s;
   }
   .btn-dark:hover { opacity: .85; }
+  .cta-contato {
+    font-size: 0.72rem; color: rgba(13,13,13,0.45);
+    margin-top: 28px; line-height: 1.6;
+  }
 
   /* ── FOOTER ── */
   footer {
@@ -453,6 +457,17 @@
   .btn-agendar:hover { opacity: .85; }
   .btn-agendar--inativo {
     opacity: .35; cursor: not-allowed;
+  }
+  /* especificidade (0,2,0) para vencer .btn-agendar:hover e .btn-dark:hover
+     (ambos (0,2,0)) e (0,3,0) para vencer qualquer hover no próprio botão
+     inativo — o estado inerte não pode "acender" ao passar o mouse. */
+  .btn-agendar.btn-agendar--inativo,
+  .btn-dark.btn-agendar--inativo,
+  .btn-agendar.btn-agendar--inativo:hover,
+  .btn-dark.btn-agendar--inativo:hover {
+    opacity: .35;
+    cursor: not-allowed;
+    box-shadow: none;
   }
   .trat-card .btn-agendar, .noiva-card .btn-agendar {
     background: var(--gold); color: var(--onyx); margin-top: 22px;
