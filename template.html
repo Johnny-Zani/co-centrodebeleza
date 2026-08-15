@@ -619,14 +619,14 @@
 
   const toggle = document.querySelector('.nav-toggle');
   const menu = document.getElementById('nav-links');
-  toggle.addEventListener('click', () => {
-    const aberto = menu.classList.toggle('aberto');
+  const setMenuAberto = aberto => {
     toggle.setAttribute('aria-expanded', String(aberto));
     toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
-  });
+  };
+  toggle.addEventListener('click', () => setMenuAberto(menu.classList.toggle('aberto')));
   menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     menu.classList.remove('aberto');
-    toggle.setAttribute('aria-expanded', 'false');
+    setMenuAberto(false);
   }));
 </script>
 </body>
