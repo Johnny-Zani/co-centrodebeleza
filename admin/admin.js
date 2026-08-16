@@ -131,7 +131,7 @@ function desenharLista() {
   for (const { grupo, itens, tipo } of itensPorGrupo(estado.conteudo)) {
     const bloco = document.createElement('div');
     bloco.className = 'grupo';
-    bloco.innerHTML = `<h2>${grupo}</h2>`;
+    bloco.innerHTML = `<h2>${escAttr(grupo)}</h2>`;
 
     for (const item of itens) {
       const foto = fotoAtual(item);
@@ -182,9 +182,29 @@ function comprimir(file, posY) {
       URL.revokeObjectURL(img.src);
       resolve({ dataUrl, base64: dataUrl.split(',')[1] });
     };
-    img.onerror = () => reject(new Error('Não consegui ler essa imagem.'));
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src);
+      reject(new Error('Não consegui ler essa imagem.'));
+    };
     img.src = URL.createObjectURL(file);
   });
+}
+
+// Mesma lógica de comprimir(), mas a partir de uma <img> já carregada na
+// tela (foto existente reenquadrada, sem escolher um arquivo novo) em vez
+// de um File — é o que faz o arraste sobre uma foto já publicada também
+// salvar o reenquadramento, e não só quando se escolhe uma foto nova.
+function comprimirDeImagem(img, posY) {
+  const canvas = document.createElement('canvas');
+  canvas.width = LARGURA;
+  canvas.height = ALTURA;
+  const ctx = canvas.getContext('2d');
+
+  const { x, y, w, h } = calcularRecorte(img.naturalWidth, img.naturalHeight, LARGURA, ALTURA, posY);
+  ctx.drawImage(img, x, y, w, h);
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+  return { dataUrl, base64: dataUrl.split(',')[1] };
 }
 
 function abrirEdicao(item, tipo) {
@@ -194,7 +214,9 @@ function abrirEdicao(item, tipo) {
 
   const foto = fotoAtual(item);
   let posY = 50;
+  const posYAoAbrir = posY;
   let arquivoEscolhido = null;
+  let urlPreviaBlob = null;
 
   tela.innerHTML = `
     <button class="voltar">← Voltar</button>
@@ -232,7 +254,12 @@ function abrirEdicao(item, tipo) {
     posY = Math.min(100, Math.max(0, posInicial - delta));
     aplicarPos();
   });
-  recorte.addEventListener('pointerup', () => { arrastando = false; });
+  function pararArraste() { arrastando = false; }
+  recorte.addEventListener('pointerup', pararArraste);
+  // Se o navegador assumir o gesto no meio do arraste (ex.: gesto de
+  // sistema), "pointerup" pode nunca chegar — sem isto, "arrastando" fica
+  // travado em true e a moldura continua seguindo eventos de ponteiro soltos.
+  recorte.addEventListener('pointercancel', pararArraste);
 
   $('#arquivo').addEventListener('change', e => {
     const f = e.target.files[0];
@@ -246,7 +273,9 @@ function abrirEdicao(item, tipo) {
     $('#erro-edicao').hidden = true;
     arquivoEscolhido = f;
     posY = 50;
-    recorte.innerHTML = `<img src="${URL.createObjectURL(f)}" alt="">`;
+    if (urlPreviaBlob) URL.revokeObjectURL(urlPreviaBlob);
+    urlPreviaBlob = URL.createObjectURL(f);
+    recorte.innerHTML = `<img src="${urlPreviaBlob}" alt="">`;
     document.querySelector('.dica').textContent = 'Arraste a foto para enquadrar';
     aplicarPos();
   });
@@ -260,12 +289,27 @@ function abrirEdicao(item, tipo) {
   $('#btn-ok').addEventListener('click', async () => {
     const alt = estado.alteracoes.get(item.id) ?? {};
 
+    // Recomprime tanto quando uma foto nova foi escolhida quanto quando a
+    // foto que já estava na tela foi só reenquadrada (arrastada) — sem a
+    // segunda condição, arrastar uma foto existente e salvar não guardava
+    // nada: a prévia se movia na tela, mas nada era escrito em alterações.
+    const reenquadrado = !arquivoEscolhido && posY !== posYAoAbrir;
     if (arquivoEscolhido) {
       try {
         const { dataUrl, base64 } = await comprimir(arquivoEscolhido, posY);
         alt.foto = { dataUrl, base64, caminho: `fotos/${item.id}.jpg` };
       } catch (e) {
         $('#erro-edicao').textContent = e.message;
+        $('#erro-edicao').hidden = false;
+        return;
+      }
+    } else if (reenquadrado) {
+      const img = recorte.querySelector('img');
+      try {
+        const { dataUrl, base64 } = comprimirDeImagem(img, posY);
+        alt.foto = { dataUrl, base64, caminho: `fotos/${item.id}.jpg` };
+      } catch (e) {
+        $('#erro-edicao').textContent = 'Não consegui processar essa foto.';
         $('#erro-edicao').hidden = false;
         return;
       }
