@@ -6,6 +6,16 @@ const estado = {
 
 const $ = s => document.querySelector(s);
 
+// Escapa valores antes de interpolar em atributos value="..." — sem isso,
+// um endereço com aspas (ex.: Sala "202") fecharia o atributo cedo e
+// corromperia o resto do formulário de edição do salão.
+function escAttr(texto) {
+  return String(texto ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;');
+}
+
 const MOEDA = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2, maximumFractionDigits: 2
 });
@@ -74,15 +84,15 @@ function abrirEdicaoSalao() {
     <p class="ajuda">Aparecem no rodapé e nos botões de agendar.</p>
     <div class="campo">
       <label for="zap">WhatsApp (só números, com 55 e DDD)</label>
-      <input type="text" id="zap" inputmode="numeric" value="${alt.whatsapp ?? s.whatsapp}">
+      <input type="text" id="zap" inputmode="numeric" value="${escAttr(alt.whatsapp ?? s.whatsapp)}">
     </div>
     <div class="campo">
       <label for="end">Endereço</label>
-      <input type="text" id="end" value="${alt.endereco ?? s.endereco}">
+      <input type="text" id="end" value="${escAttr(alt.endereco ?? s.endereco)}">
     </div>
     <div class="campo">
       <label for="hor">Horário de funcionamento</label>
-      <input type="text" id="hor" value="${alt.horarios ?? s.horarios}">
+      <input type="text" id="hor" value="${escAttr(alt.horarios ?? s.horarios)}">
     </div>
     <button id="btn-ok">Guardar alteração</button>
     <p class="erro" id="erro-edicao" hidden></p>`;
