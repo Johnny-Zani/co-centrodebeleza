@@ -347,3 +347,98 @@ async function entrar() {
 
 $('#btn-entrar').addEventListener('click', entrar);
 $('#senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+
+// Aplica todas as alterações pendentes (mapa estado.alteracoes) por cima de
+// uma cópia de conteudo.json, produzindo o JSON final que vai para o
+// commit. Usada tanto para montar o payload de /api/salvar quanto, após o
+// sucesso, para atualizar estado.conteudo sem precisar buscar o arquivo de
+// novo no servidor.
+function aplicarAlteracoes(conteudo) {
+  const copia = structuredClone(conteudo);
+
+  const salao = estado.alteracoes.get('__salao');
+  if (salao) Object.assign(copia.salao, salao);
+
+  const todos = [
+    ...copia.categorias.flatMap(c => c.servicos),
+    ...copia.tratamentos, ...copia.noiva, ...copia.profissionais
+  ];
+  for (const item of todos) {
+    const alt = estado.alteracoes.get(item.id);
+    if (!alt) continue;
+    if (alt.preco !== undefined) item.preco = alt.preco;
+    if (alt.foto) item.foto = alt.foto.caminho;
+  }
+  return copia;
+}
+
+// Aviso em tela cheia usado tanto para erros quanto para o sucesso da
+// publicação. Com comContador=true, mostra uma contagem regressiva de 40s
+// (tempo aproximado de propagação do build) — é só uma barra de progresso
+// visual, não trava nada: o botão "Entendi" fecha o aviso a qualquer momento.
+function mostrarAviso(titulo, texto, comContador) {
+  const div = document.createElement('div');
+  div.className = 'aviso';
+  div.innerHTML = `
+    <h2>${titulo}</h2>
+    ${comContador ? '<div class="contador">40</div>' : ''}
+    <p>${texto}</p>
+    <button>Entendi</button>`;
+  div.querySelector('button').addEventListener('click', () => div.remove());
+  document.body.appendChild(div);
+
+  if (comContador) {
+    const alvo = div.querySelector('.contador');
+    let s = 40;
+    const t = setInterval(() => {
+      s -= 1;
+      alvo.textContent = s;
+      if (s <= 0) { clearInterval(t); alvo.textContent = 'pronto'; }
+    }, 1000);
+  }
+  return div;
+}
+
+$('#btn-publicar').addEventListener('click', async () => {
+  const botao = $('#btn-publicar');
+  botao.disabled = true;
+  botao.textContent = 'Publicando…';
+
+  const fotos = [...estado.alteracoes.values()]
+    .filter(a => a.foto)
+    .map(a => ({ caminho: a.foto.caminho, base64: a.foto.base64 }));
+
+  try {
+    const r = await fetch('/api/salvar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        senha: estado.senha,
+        conteudo: aplicarAlteracoes(estado.conteudo),
+        fotos
+      })
+    });
+    const dados = await r.json();
+
+    if (!dados.ok) {
+      mostrarAviso('Não deu certo', dados.erro, false);
+      botao.disabled = false;
+      botao.textContent = 'Publicar';
+      return;
+    }
+
+    estado.conteudo = aplicarAlteracoes(estado.conteudo);
+    estado.alteracoes.clear();
+    desenharLista();
+    botao.textContent = 'Publicar';
+    mostrarAviso(
+      'Publicado!',
+      'O site leva cerca de 40 segundos para atualizar. Se você abrir agora, ainda vai ver a versão antiga — espere o contador acabar e recarregue.',
+      true
+    );
+  } catch (e) {
+    mostrarAviso('Não deu certo', 'Sem conexão. Suas alterações não se perderam: tente publicar de novo.', false);
+    botao.disabled = false;
+    botao.textContent = 'Publicar';
+  }
+});

@@ -79,3 +79,15 @@ header button { width: auto; padding: 10px 18px; font-size: 0.85rem; }
   display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 6px;
 }
 .arquivo { margin-bottom: 14px; }
+
+.aviso {
+  position: fixed; inset: 0;
+  background: rgba(13,13,13,0.94); color: var(--warm);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 30px; text-align: center; gap: 14px;
+}
+.aviso h2 { font-size: 1.15rem; color: var(--gold); }
+.aviso p { font-size: 0.9rem; line-height: 1.6; max-width: 320px; }
+.aviso button { width: auto; padding: 12px 24px; }
+.contador { font-size: 2rem; font-weight: 300; color: var(--gold); }
