@@ -1,27 +1,27 @@
 import { calcularRecorte } from './recorte.js';
+import { precoTexto } from './preco.js';
+import { aplicarAlteracoes } from './alteracoes.js';
 
 const estado = {
   senha: null,
   conteudo: null,
-  alteracoes: new Map()   // id → { preco?, foto? }
+  alteracoes: new Map()   // id → { preco?, preco_avulsa?, foto? }
 };
 
 const $ = s => document.querySelector(s);
 
-// Escapa valores antes de interpolar em atributos value="..." — sem isso,
-// um endereço com aspas (ex.: Sala "202") fecharia o atributo cedo e
-// corromperia o resto do formulário de edição do salão.
-function escAttr(texto) {
+// Escapa valores antes de interpolar em HTML/atributos value="..." — sem
+// isso, um endereço com aspas (ex.: Sala "202") fecharia o atributo cedo e
+// corromperia o resto do formulário de edição do salão. Nome deliberadamente
+// diferente de build/render.js:esc() — são funções distintas (conjuntos de
+// caracteres diferentes, para contextos diferentes) que só coincidem de
+// existir no mesmo projeto.
+function escHtml(texto) {
   return String(texto ?? '')
     .replaceAll('&', '&amp;')
     .replaceAll('"', '&quot;')
     .replaceAll('<', '&lt;');
 }
-
-const MOEDA = new Intl.NumberFormat('pt-BR', {
-  minimumFractionDigits: 2, maximumFractionDigits: 2
-});
-const precoTexto = v => `a partir de R$ ${MOEDA.format(v)}`;
 
 // Reúne todos os itens editáveis numa lista plana, preservando o grupo
 // a que pertencem — é assim que a tela de lista é montada.
@@ -43,6 +43,13 @@ function fotoAtual(item) {
 function precoAtual(item) {
   const alt = estado.alteracoes.get(item.id);
   return alt?.preco ?? item.preco;
+}
+
+// Só tratamento tem preco_avulsa (a sessão avulsa do pacote) — ver mesma
+// checagem em build/validar.js.
+function precoAvulsaAtual(item) {
+  const alt = estado.alteracoes.get(item.id);
+  return alt?.preco_avulsa ?? item.preco_avulsa;
 }
 
 // Grupo "Dados do salão": whatsapp, endereço e horário não têm a forma de
@@ -86,15 +93,15 @@ function abrirEdicaoSalao() {
     <p class="ajuda">Aparecem no rodapé e nos botões de agendar.</p>
     <div class="campo">
       <label for="zap">WhatsApp (só números, com 55 e DDD)</label>
-      <input type="text" id="zap" inputmode="numeric" value="${escAttr(alt.whatsapp ?? s.whatsapp)}">
+      <input type="text" id="zap" inputmode="numeric" value="${escHtml(alt.whatsapp ?? s.whatsapp)}">
     </div>
     <div class="campo">
       <label for="end">Endereço</label>
-      <input type="text" id="end" value="${escAttr(alt.endereco ?? s.endereco)}">
+      <input type="text" id="end" value="${escHtml(alt.endereco ?? s.endereco)}">
     </div>
     <div class="campo">
       <label for="hor">Horário de funcionamento</label>
-      <input type="text" id="hor" value="${escAttr(alt.horarios ?? s.horarios)}">
+      <input type="text" id="hor" value="${escHtml(alt.horarios ?? s.horarios)}">
     </div>
     <button id="btn-ok">Guardar alteração</button>
     <p class="erro" id="erro-edicao" hidden></p>`;
@@ -131,7 +138,7 @@ function desenharLista() {
   for (const { grupo, itens, tipo } of itensPorGrupo(estado.conteudo)) {
     const bloco = document.createElement('div');
     bloco.className = 'grupo';
-    bloco.innerHTML = `<h2>${escAttr(grupo)}</h2>`;
+    bloco.innerHTML = `<h2>${escHtml(grupo)}</h2>`;
 
     for (const item of itens) {
       const foto = fotoAtual(item);
@@ -141,11 +148,11 @@ function desenharLista() {
         + (estado.alteracoes.has(item.id) ? ' alterada' : '');
       linha.innerHTML = `
         ${foto
-          ? `<img src="${escAttr(foto)}" alt="">`
+          ? `<img src="${escHtml(foto)}" alt="">`
           : `<div class="vazio">sem foto</div>`}
         <div class="info">
-          <div class="nome">${escAttr(item.nome)}</div>
-          <div class="preco">${tipo === 'profissional' ? escAttr(item.funcao) : precoTexto(precoAtual(item))}</div>
+          <div class="nome">${escHtml(item.nome)}</div>
+          <div class="preco">${tipo === 'profissional' ? escHtml(item.funcao) : precoTexto(precoAtual(item))}</div>
         </div>`;
       linha.addEventListener('click', () => abrirEdicao(item, tipo));
       bloco.appendChild(linha);
@@ -195,6 +202,15 @@ function comprimir(file, posY) {
 // de um File — é o que faz o arraste sobre uma foto já publicada também
 // salvar o reenquadramento, e não só quando se escolhe uma foto nova.
 function comprimirDeImagem(img, posY) {
+  // Se a <img> ainda não terminou de decodificar, naturalWidth/naturalHeight
+  // vêm 0. calcularRecorte produziria dimensões NaN, e drawImage com
+  // argumentos não-finitos é um no-op silencioso (spec do canvas) — sem
+  // exceção, então o try/catch de quem chama isto não pegaria nada, e o
+  // resultado seria um JPEG em branco sobrescrevendo uma foto boa.
+  if (!img.naturalWidth || !img.naturalHeight) {
+    throw new Error('A foto ainda está carregando. Tente de novo.');
+  }
+
   const canvas = document.createElement('canvas');
   canvas.width = LARGURA;
   canvas.height = ALTURA;
@@ -220,10 +236,10 @@ function abrirEdicao(item, tipo) {
 
   tela.innerHTML = `
     <button class="voltar">← Voltar</button>
-    <h1>${escAttr(item.nome)}</h1>
-    <p class="ajuda">${tipo === 'profissional' ? escAttr(item.funcao) : 'Foto e preço'}</p>
+    <h1>${escHtml(item.nome)}</h1>
+    <p class="ajuda">${tipo === 'profissional' ? escHtml(item.funcao) : 'Foto e preço'}</p>
     <div class="recorte" id="recorte">
-      ${foto ? `<img src="${escAttr(foto)}" alt="">` : ''}
+      ${foto ? `<img src="${escHtml(foto)}" alt="">` : ''}
     </div>
     <p class="dica">${foto ? 'Arraste a foto para enquadrar' : 'Escolha uma foto abaixo'}</p>
     <input class="arquivo" type="file" accept="image/*" id="arquivo">
@@ -232,6 +248,11 @@ function abrirEdicao(item, tipo) {
       <label for="preco">Preço (só o número, sem R$)</label>
       <input type="number" id="preco" min="1" step="1" value="${precoAtual(item)}">
     </div>`}
+    ${tipo === 'tratamento' ? `
+    <div class="campo">
+      <label for="preco-avulsa">Preço avulso (só o número, sem R$)</label>
+      <input type="number" id="preco-avulsa" min="1" step="1" value="${precoAvulsaAtual(item)}">
+    </div>` : ''}
     <button id="btn-ok">Guardar alteração</button>
     <p class="erro" id="erro-edicao" hidden></p>`;
 
@@ -315,12 +336,18 @@ function abrirEdicao(item, tipo) {
         const { dataUrl, base64 } = comprimirDeImagem(img, posY);
         alt.foto = { dataUrl, base64, caminho: `fotos/${item.id}.jpg` };
       } catch (e) {
-        $('#erro-edicao').textContent = 'Não consegui processar essa foto.';
+        $('#erro-edicao').textContent = e.message;
         $('#erro-edicao').hidden = false;
         return;
       }
     }
 
+    // Se o valor digitado for igual ao original, "delete" limpa a edição de
+    // preço pendente em vez de deixar alt.preco parado no valor anterior —
+    // sem isso, editar 120→130, salvar, reabrir e digitar 120 de volta (o
+    // original) não reverte nada: v === item.preco pula o "if", mas alt.preco
+    // continua 130 (herdado do spread de estado.alteracoes.get(item.id) lá em
+    // cima) e 130 fica indo para a publicação mesmo depois de "revertido".
     const campoPreco = $('#preco');
     if (campoPreco) {
       const v = Number(campoPreco.value);
@@ -329,10 +356,25 @@ function abrirEdicao(item, tipo) {
         $('#erro-edicao').hidden = false;
         return;
       }
-      if (v !== item.preco) alt.preco = v;
+      if (v !== item.preco) alt.preco = v; else delete alt.preco;
     }
 
+    const campoPrecoAvulsa = $('#preco-avulsa');
+    if (campoPrecoAvulsa) {
+      const v = Number(campoPrecoAvulsa.value);
+      if (!Number.isFinite(v) || v <= 0) {
+        $('#erro-edicao').textContent = 'O preço avulso precisa ser um número maior que zero.';
+        $('#erro-edicao').hidden = false;
+        return;
+      }
+      if (v !== item.preco_avulsa) alt.preco_avulsa = v; else delete alt.preco_avulsa;
+    }
+
+    // Só fica pendente se sobrou algo depois dos "delete" acima — senão a
+    // entrada some do Map, a barrinha "alterada" desaparece na lista, e
+    // Publicar volta a ficar desabilitado se não houver mais nada pendente.
     if (Object.keys(alt).length > 0) estado.alteracoes.set(item.id, alt);
+    else estado.alteracoes.delete(item.id);
     tela.hidden = true;
     $('#tela-lista').hidden = false;
     desenharLista();
@@ -361,30 +403,6 @@ async function entrar() {
 
 $('#btn-entrar').addEventListener('click', entrar);
 $('#senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
-
-// Aplica todas as alterações pendentes (mapa estado.alteracoes) por cima de
-// uma cópia de conteudo.json, produzindo o JSON final que vai para o
-// commit. Usada tanto para montar o payload de /api/salvar quanto, após o
-// sucesso, para atualizar estado.conteudo sem precisar buscar o arquivo de
-// novo no servidor.
-function aplicarAlteracoes(conteudo) {
-  const copia = structuredClone(conteudo);
-
-  const salao = estado.alteracoes.get('__salao');
-  if (salao) Object.assign(copia.salao, salao);
-
-  const todos = [
-    ...copia.categorias.flatMap(c => c.servicos),
-    ...copia.tratamentos, ...copia.noiva, ...copia.profissionais
-  ];
-  for (const item of todos) {
-    const alt = estado.alteracoes.get(item.id);
-    if (!alt) continue;
-    if (alt.preco !== undefined) item.preco = alt.preco;
-    if (alt.foto) item.foto = alt.foto.caminho;
-  }
-  return copia;
-}
 
 // Número de fotos por publicação até o qual o corpo do request fica com
 // folga confortável sob o limite de ~4.5MB da Vercel para funções
@@ -456,8 +474,8 @@ $('#btn-publicar').addEventListener('click', async () => {
     // continuar pendente. Isso está dentro do try porque, embora improvável
     // (é só montagem de JSON), se algo aqui lançasse antes do fetch o botão
     // ficaria travado em "Publicando…" sem nenhum aviso.
-    const publicado = aplicarAlteracoes(estado.conteudo);
     const enviadas = new Map(estado.alteracoes);
+    const publicado = aplicarAlteracoes(estado.conteudo, enviadas);
     const fotos = [...enviadas.values()]
       .filter(alt => alt.foto)
       .map(alt => ({ caminho: alt.foto.caminho, base64: alt.foto.base64 }));
