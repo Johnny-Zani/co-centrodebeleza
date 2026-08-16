@@ -339,7 +339,15 @@ async function entrar() {
   const senha = $('#senha').value;
   if (!senha) return;
   estado.senha = senha;
-  estado.conteudo = await (await fetch('/conteudo.json?' + Date.now())).json();
+  $('#erro-login').hidden = true;
+  // A senha só é validada de verdade no servidor, ao publicar — aqui ela só
+  // é guardada. Se o conteúdo já foi carregado (ex.: ela voltou para esta
+  // tela porque errou a senha ao publicar), não buscar de novo: um novo
+  // fetch traria um objeto diferente do que estado.alteracoes referencia
+  // internamente, e ela perderia tudo que ainda não publicou.
+  if (!estado.conteudo) {
+    estado.conteudo = await (await fetch('/conteudo.json?' + Date.now())).json();
+  }
   $('#tela-login').hidden = true;
   $('#tela-lista').hidden = false;
   desenharLista();
@@ -372,30 +380,49 @@ function aplicarAlteracoes(conteudo) {
   return copia;
 }
 
+// Número de fotos por publicação até o qual o corpo do request fica com
+// folga confortável sob o limite de ~4.5MB da Vercel para funções
+// serverless, mesmo no cenário pessimista (fotos "pesadas", perto do maior
+// arquivo comprimido observado no catálogo real). Ver docs/PAINEL.md e o
+// relatório da Task 12 para a conta completa. Usado só para orientar a
+// mensagem quando o servidor recusa o lote por tamanho — não é aplicado
+// como limite no cliente (não há chunking/retry automático).
+const LOTE_FOTOS_RECOMENDADO = 25;
+
 // Aviso em tela cheia usado tanto para erros quanto para o sucesso da
 // publicação. Com comContador=true, mostra uma contagem regressiva de 40s
 // (tempo aproximado de propagação do build) — é só uma barra de progresso
-// visual, não trava nada: o botão "Entendi" fecha o aviso a qualquer momento.
+// visual, não trava nada: o botão "Entendi" fecha o aviso a qualquer momento,
+// e faz questão de parar o intervalo (senão ele continua rodando contra um
+// nó já removido do DOM).
 function mostrarAviso(titulo, texto, comContador) {
   const div = document.createElement('div');
   div.className = 'aviso';
   div.innerHTML = `
     <h2>${titulo}</h2>
     ${comContador ? '<div class="contador">40</div>' : ''}
-    <p>${texto}</p>
+    <p></p>
     <button>Entendi</button>`;
-  div.querySelector('button').addEventListener('click', () => div.remove());
-  document.body.appendChild(div);
+  // texto pode vir do servidor (dados.erro) — nunca interpolado como HTML.
+  div.querySelector('p').textContent = texto ?? 'Erro desconhecido.';
 
+  let intervalo = null;
   if (comContador) {
     const alvo = div.querySelector('.contador');
     let s = 40;
-    const t = setInterval(() => {
+    intervalo = setInterval(() => {
       s -= 1;
       alvo.textContent = s;
-      if (s <= 0) { clearInterval(t); alvo.textContent = 'pronto'; }
+      if (s <= 0) { clearInterval(intervalo); alvo.textContent = 'pronto'; }
     }, 1000);
   }
+
+  div.querySelector('button').addEventListener('click', () => {
+    if (intervalo) clearInterval(intervalo);
+    div.remove();
+  });
+  document.body.appendChild(div);
+
   return div;
 }
 
@@ -404,31 +431,72 @@ $('#btn-publicar').addEventListener('click', async () => {
   botao.disabled = true;
   botao.textContent = 'Publicando…';
 
-  const fotos = [...estado.alteracoes.values()]
-    .filter(a => a.foto)
-    .map(a => ({ caminho: a.foto.caminho, base64: a.foto.base64 }));
+  // Tira o "retrato" do que vai ser publicado uma única vez, ANTES do
+  // fetch, e guarda quais ids foram enviados. #tela-lista continua clicável
+  // durante o request (nada bloqueia a UI), então se ela guardar mais uma
+  // alteração enquanto o publish está em voo, essa alteração não pode ser
+  // nem incluída no corpo já enviado, nem apagada no sucesso — por isso não
+  // se chama aplicarAlteracoes() de novo depois, nem se usa .clear().
+  const publicado = aplicarAlteracoes(estado.conteudo);
+  const enviadas = [...estado.alteracoes.keys()];
+  const fotos = enviadas
+    .map(id => estado.alteracoes.get(id))
+    .filter(alt => alt.foto)
+    .map(alt => ({ caminho: alt.foto.caminho, base64: alt.foto.base64 }));
+
+  function falhou(texto) {
+    mostrarAviso('Não deu certo', texto, false);
+    botao.disabled = false;
+    botao.textContent = 'Publicar';
+  }
 
   try {
     const r = await fetch('/api/salvar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        senha: estado.senha,
-        conteudo: aplicarAlteracoes(estado.conteudo),
-        fotos
-      })
+      body: JSON.stringify({ senha: estado.senha, conteudo: publicado, fotos })
     });
-    const dados = await r.json();
 
-    if (!dados.ok) {
-      mostrarAviso('Não deu certo', dados.erro, false);
+    // 413 (lote grande demais) e outras respostas de infraestrutura (ex.:
+    // 504 de timeout) nunca chegam a api/salvar.js, então o corpo não é o
+    // JSON { ok, erro } que o handler sempre devolve — tentar decodificar
+    // isso como JSON lançaria, e cairia no catch genérico de "sem conexão",
+    // que é enganoso quando a conexão está ótima e o problema é outro.
+    if (r.status === 413) {
+      falhou(`O lote está grande demais para publicar de uma vez. Publique em até ${LOTE_FOTOS_RECOMENDADO} fotos por rodada, em duas rodadas, e tente de novo.`);
+      return;
+    }
+
+    let dados;
+    try {
+      dados = await r.json();
+    } catch {
+      falhou(`O servidor respondeu de forma inesperada (código ${r.status}). Tente de novo em instantes.`);
+      return;
+    }
+
+    // Senha incorreta: nada foi publicado (api/salvar.js recusa antes de
+    // tocar no GitHub), então estado.alteracoes continua intacto. Volta
+    // para a tela de login, sem mexer nas alterações pendentes, para ela
+    // digitar a senha certa e tentar de novo sem perder nada.
+    if (r.status === 401) {
+      $('#tela-lista').hidden = true;
+      $('#tela-login').hidden = false;
+      $('#senha').value = '';
+      $('#erro-login').textContent = dados.erro || 'Senha incorreta. Tente de novo.';
+      $('#erro-login').hidden = false;
       botao.disabled = false;
       botao.textContent = 'Publicar';
       return;
     }
 
-    estado.conteudo = aplicarAlteracoes(estado.conteudo);
-    estado.alteracoes.clear();
+    if (!dados.ok) {
+      falhou(dados.erro ?? 'Erro desconhecido.');
+      return;
+    }
+
+    estado.conteudo = publicado;
+    for (const id of enviadas) estado.alteracoes.delete(id);
     desenharLista();
     botao.textContent = 'Publicar';
     mostrarAviso(
@@ -437,8 +505,6 @@ $('#btn-publicar').addEventListener('click', async () => {
       true
     );
   } catch (e) {
-    mostrarAviso('Não deu certo', 'Sem conexão. Suas alterações não se perderam: tente publicar de novo.', false);
-    botao.disabled = false;
-    botao.textContent = 'Publicar';
+    falhou('Sem conexão. Suas alterações não se perderam: tente publicar de novo.');
   }
 });

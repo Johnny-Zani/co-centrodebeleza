@@ -1,6 +1,8 @@
 # Painel da Carol
 
-**Endereço:** `https://<dominio>/admin/`
+**Endereço:** `https://co-centrodebeleza.vercel.app/admin/` (ou o domínio
+próprio do site, se já estiver configurado — o endereço final será
+combinado com você separadamente).
 
 ## Como usar
 
@@ -19,10 +21,15 @@
 - **Publiquei a foto errada:** suba a certa por cima e publique de novo.
 - **O site não mudou:** espere um minuto e recarregue a página.
 - **Diz que o preço é inválido:** digite só o número, sem "R$" e sem vírgula.
-- **Diz senha incorreta muitas vezes:** espere 15 minutos.
-- **Vou trocar muitas fotos de uma vez (mais de 15-20 numa única sessão):**
+- **Diz senha incorreta:** o painel volta para a tela de entrada. Suas
+  alterações continuam guardadas — digite a senha certa e toque em
+  Publicar de novo, sem precisar refazer nada.
+- **Diz senha incorreta muitas vezes seguidas:** espere 15 minutos.
+- **Vou trocar muitas fotos de uma vez (mais de 25 numa única sessão):**
   publique em duas rodadas menores em vez de uma só. O envio tem um limite
-  de tamanho, e uma leva muito grande de fotos de uma vez só pode não passar.
+  de tamanho, e uma leva muito grande de fotos de uma vez só pode não passar
+  — nesse caso o painel avisa e nada se perde, mas é mais rápido já dividir
+  em duas rodadas de até 25 fotos cada.
 
 Nada do que você fizer aqui consegue derretar o site. Se o conteúdo ficar
 inválido, a publicação é recusada e a versão anterior continua no ar.
