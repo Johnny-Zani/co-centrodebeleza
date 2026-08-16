@@ -1,4 +1,4 @@
-import { commitarArquivos } from './github.js';
+import { commitarArquivos } from './_github.js';
 
 const tentativas = new Map();          // ip → { contagem, ate }
 const JANELA_MS = 15 * 60 * 1000;

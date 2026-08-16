@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { commitarArquivos } from '../api/github.js';
+import { commitarArquivos } from '../api/_github.js';
 
 function fetchFalso(respostas) {
   const chamadas = [];
