@@ -44,6 +44,7 @@ rmSync('public', { recursive: true, force: true });
 mkdirSync('public', { recursive: true });
 writeFileSync('public/index.html', html);
 cpSync('fotos', 'public/fotos', { recursive: true });
+cpSync('conteudo.json', 'public/conteudo.json');
 if (existsSync('admin')) cpSync('admin', 'public/admin', { recursive: true });
 
 console.log('✔ public/index.html gerado');

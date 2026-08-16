@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Painel · C.O. Centro de Beleza</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div id="tela-login">
+  <h1>Painel C.O.</h1>
+  <p class="ajuda">Digite a senha para editar fotos e preços.</p>
+  <input type="password" id="senha" placeholder="Senha" autocomplete="current-password">
+  <button id="btn-entrar">Entrar</button>
+  <p class="erro" id="erro-login" hidden></p>
+</div>
+
+<div id="tela-lista" hidden>
+  <header>
+    <h1>O que você quer editar?</h1>
+    <button id="btn-publicar" disabled>Publicar</button>
+  </header>
+  <p class="ajuda" id="resumo"></p>
+  <div id="listas"></div>
+</div>
+
+<div id="tela-edicao" hidden></div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
