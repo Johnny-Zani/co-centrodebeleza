@@ -287,7 +287,13 @@ function abrirEdicao(item, tipo) {
   });
 
   $('#btn-ok').addEventListener('click', async () => {
-    const alt = estado.alteracoes.get(item.id) ?? {};
+    // Copia o que já existia (em vez de pegar a mesma referência do Map) —
+    // cada "Guardar alteração" precisa produzir um objeto novo. Isso é o
+    // que permite, na publicação, distinguir "essa entrada é exatamente a
+    // que foi enviada" de "essa entrada foi substituída por uma edição mais
+    // nova enquanto o request estava em voo" — uma mutação in-place do
+    // objeto antigo apagaria essa distinção.
+    const alt = { ...(estado.alteracoes.get(item.id) ?? {}) };
 
     // Recomprime tanto quando uma foto nova foi escolhida quanto quando a
     // foto que já estava na tela foi só reenquadrada (arrastada) — sem a
@@ -431,19 +437,6 @@ $('#btn-publicar').addEventListener('click', async () => {
   botao.disabled = true;
   botao.textContent = 'Publicando…';
 
-  // Tira o "retrato" do que vai ser publicado uma única vez, ANTES do
-  // fetch, e guarda quais ids foram enviados. #tela-lista continua clicável
-  // durante o request (nada bloqueia a UI), então se ela guardar mais uma
-  // alteração enquanto o publish está em voo, essa alteração não pode ser
-  // nem incluída no corpo já enviado, nem apagada no sucesso — por isso não
-  // se chama aplicarAlteracoes() de novo depois, nem se usa .clear().
-  const publicado = aplicarAlteracoes(estado.conteudo);
-  const enviadas = [...estado.alteracoes.keys()];
-  const fotos = enviadas
-    .map(id => estado.alteracoes.get(id))
-    .filter(alt => alt.foto)
-    .map(alt => ({ caminho: alt.foto.caminho, base64: alt.foto.base64 }));
-
   function falhou(texto) {
     mostrarAviso('Não deu certo', texto, false);
     botao.disabled = false;
@@ -451,6 +444,24 @@ $('#btn-publicar').addEventListener('click', async () => {
   }
 
   try {
+    // Tira o "retrato" do que vai ser publicado uma única vez, ANTES do
+    // fetch, e guarda os VALORES enviados (não só os ids) — #tela-lista
+    // continua clicável durante o request (nada bloqueia a UI), então ela
+    // pode reabrir um item já incluído no lote e salvar de novo enquanto
+    // ele ainda está em voo. Cada "Guardar alteração" produz um objeto novo
+    // (nunca muta o que já estava no Map), então "enviadas" guarda
+    // referências congeladas do que foi de fato mandado — se o Map ainda
+    // apontar para o mesmo objeto depois da resposta, nada mudou nesse meio
+    // tempo; se apontar para outro, ela reeditou e a entrada precisa
+    // continuar pendente. Isso está dentro do try porque, embora improvável
+    // (é só montagem de JSON), se algo aqui lançasse antes do fetch o botão
+    // ficaria travado em "Publicando…" sem nenhum aviso.
+    const publicado = aplicarAlteracoes(estado.conteudo);
+    const enviadas = new Map(estado.alteracoes);
+    const fotos = [...enviadas.values()]
+      .filter(alt => alt.foto)
+      .map(alt => ({ caminho: alt.foto.caminho, base64: alt.foto.base64 }));
+
     const r = await fetch('/api/salvar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -478,8 +489,12 @@ $('#btn-publicar').addEventListener('click', async () => {
     // Senha incorreta: nada foi publicado (api/salvar.js recusa antes de
     // tocar no GitHub), então estado.alteracoes continua intacto. Volta
     // para a tela de login, sem mexer nas alterações pendentes, para ela
-    // digitar a senha certa e tentar de novo sem perder nada.
+    // digitar a senha certa e tentar de novo sem perder nada. #tela-edicao
+    // também precisa ser escondida aqui — se ela estava dentro do editor de
+    // um item quando a resposta chegou, sem isso as duas telas ficariam
+    // visíveis ao mesmo tempo.
     if (r.status === 401) {
+      $('#tela-edicao').hidden = true;
       $('#tela-lista').hidden = true;
       $('#tela-login').hidden = false;
       $('#senha').value = '';
@@ -496,7 +511,13 @@ $('#btn-publicar').addEventListener('click', async () => {
     }
 
     estado.conteudo = publicado;
-    for (const id of enviadas) estado.alteracoes.delete(id);
+    // Só remove uma entrada se ela ainda for exatamente o objeto que foi
+    // enviado — se ela reeditou o mesmo item enquanto o request estava em
+    // voo, o Map já aponta para um objeto novo, a comparação falha, e a
+    // edição mais recente permanece pendente (marcada "alterada").
+    for (const [id, alt] of enviadas) {
+      if (estado.alteracoes.get(id) === alt) estado.alteracoes.delete(id);
+    }
     desenharLista();
     botao.textContent = 'Publicar';
     mostrarAviso(
