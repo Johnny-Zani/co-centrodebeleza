@@ -32,4 +32,5 @@ combinado com você separadamente).
   em duas rodadas de até 25 fotos cada.
 
 Nada do que você fizer aqui consegue derretar o site. Se o conteúdo ficar
-inválido, a publicação é recusada e a versão anterior continua no ar.
+inválido, o site simplesmente não atualiza — a versão anterior continua no
+ar, e alguém precisa corrigir o problema. Nada sai do ar.
