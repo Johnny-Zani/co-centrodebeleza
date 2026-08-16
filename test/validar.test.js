@@ -78,3 +78,35 @@ test('whatsapp com caracteres não numéricos é erro', () => {
 test('whatsapp vazio é aceito (ainda não temos o número)', () => {
   assert.deepEqual(validar(conteudoMinimo(), existeSempre), []);
 });
+
+test('id com letra maiúscula é erro (viraria fotos/<id>.jpg com caracteres inválidos)', () => {
+  const c = conteudoMinimo();
+  c.categorias[0].servicos[0].id = 'noiva-Luxo';
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /id só pode ter/i);
+});
+
+test('id com underscore é erro', () => {
+  const c = conteudoMinimo();
+  c.categorias[0].servicos[0].id = 'depilacao_rosto';
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /id só pode ter/i);
+});
+
+test('conteudo.json sem "salao" gera erro legível em vez de travar', () => {
+  const c = conteudoMinimo();
+  delete c.salao;
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /salao/);
+});
+
+test('categoria sem "servicos" gera erro legível em vez de travar', () => {
+  const c = conteudoMinimo();
+  c.categorias = [{ nome: 'Sem lista de serviços' }];
+  const erros = validar(c, existeSempre);
+  assert.equal(erros.length, 1);
+  assert.match(erros[0], /categorias\[0\]/);
+});

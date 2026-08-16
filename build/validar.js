@@ -1,6 +1,39 @@
 // Valida o conteudo.json. Puro: recebe o objeto e um verificador de
 // existência de arquivo, devolve lista de erros legíveis.
 export function validar(conteudo, arquivoExiste) {
+  // Guarda de forma: sem isso, um conteudo.json com "salao" ausente ou
+  // "categorias"/"tratamentos"/etc. no formato errado faz o .map()/
+  // .flatMap() logo abaixo lançar um TypeError puro — o build ainda sai
+  // com código de saída != 0 (a propriedade de segurança se mantém), mas
+  // quem está olhando vê um stack trace em vez de uma mensagem legível
+  // como as outras deste arquivo.
+  const errosDeForma = [];
+  if (!conteudo || typeof conteudo !== 'object') {
+    return ['conteudo.json precisa ser um objeto'];
+  }
+  if (!conteudo.salao || typeof conteudo.salao !== 'object') {
+    errosDeForma.push('conteudo.json.salao precisa ser um objeto');
+  }
+  if (!Array.isArray(conteudo.profissionais)) {
+    errosDeForma.push('conteudo.json.profissionais precisa ser uma lista');
+  }
+  if (!Array.isArray(conteudo.categorias)) {
+    errosDeForma.push('conteudo.json.categorias precisa ser uma lista');
+  } else {
+    conteudo.categorias.forEach((c, i) => {
+      if (!c || typeof c !== 'object' || !Array.isArray(c.servicos)) {
+        errosDeForma.push(`conteudo.json.categorias[${i}] precisa ter uma lista "servicos"`);
+      }
+    });
+  }
+  if (!Array.isArray(conteudo.tratamentos)) {
+    errosDeForma.push('conteudo.json.tratamentos precisa ser uma lista');
+  }
+  if (!Array.isArray(conteudo.noiva)) {
+    errosDeForma.push('conteudo.json.noiva precisa ser uma lista');
+  }
+  if (errosDeForma.length > 0) return errosDeForma;
+
   const erros = [];
   const idsVistos = new Set();
 
@@ -20,6 +53,16 @@ export function validar(conteudo, arquivoExiste) {
       erros.push(`id "${item.id}" está repetido (${tipo})`);
     }
     idsVistos.add(item.id);
+
+    // O id vira nome de arquivo (fotos/<id>.jpg) tanto em admin/admin.js
+    // quanto em api/salvar.js (regex ^fotos\/[a-z0-9-]+\.jpg$) — mas nada
+    // impedia um id fora desse formato entrar aqui. Sem esta checagem, um
+    // id como "depilacao_rosto" ou "noiva-Luxo" passa no build e só quebra
+    // depois, na hora de salvar a foto, com um erro que a Carol não
+    // consegue agir.
+    if (!/^[a-z0-9-]+$/.test(item.id)) {
+      erros.push(`${tipo} "${item.id}": id só pode ter letras minúsculas, números e hífen`);
+    }
 
     if (tipo !== 'profissional') {
       if (typeof item.preco !== 'number' || Number.isNaN(item.preco)) {

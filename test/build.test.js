@@ -60,6 +60,19 @@ test('o build falha quando o conteudo.json é inválido', () => {
   });
 });
 
+test('build.js nunca apaga public/ antes de validar — rebuild válido depois do inválido reconstrói do zero', () => {
+  // build.js faz rmSync('public') e só depois escreve os arquivos novos. Se
+  // essa ordem alguma vez trocasse (destrói antes de validar), o teste
+  // acima ("falha quando inválido") continuaria passando — ele só olha o
+  // código de saída — mas public/ ficaria vazio/quebrado depois de um build
+  // inválido, mesmo com o conteudo.json real são no disco. Este teste
+  // reconstrói com o fixture VÁLIDO logo em seguida e confirma que
+  // public/index.html volta a ter conteúdo conhecido-bom.
+  execFileSync('node', ['build.js'], { stdio: 'pipe' });
+  const html = readFileSync('public/index.html', 'utf8');
+  assert.ok(html.includes('Maquiagem Glam'), 'public/ não voltou a um estado bom depois do build inválido');
+});
+
 test('"$`", "$&" e "$\'" num detalhe não corrompem o HTML gerado', () => {
   // String.prototype.replace() dá significado especial a $&, $`, $' e $$ na
   // STRING DE SUBSTITUIÇÃO. O conteúdo das seções vem de conteudo.json, que a
@@ -80,4 +93,16 @@ test('"$`", "$&" e "$\'" num detalhe não corrompem o HTML gerado', () => {
     'o detalhe com "$`"/"$&"/"$\'" saiu corrompido ou incompleto do build');
   assert.ok(!saida.includes('{{'), 'marcador reapareceu na saída (reinjetado via padrão "$")');
   assert.equal((saida.match(/<footer>/g) ?? []).length, 1, 'footer duplicado (template reinjetado via padrão "$")');
+});
+
+// Este arquivo é o último a rodar um build com CONTEUDO customizado (o
+// teste acima usa a fixture de caracteres especiais) — sem isso, quem
+// rodar "npm test" e depois quiser servir public/ localmente para
+// conferir visualmente acha um site minúsculo de fixture em vez do real.
+// public/ é gitignored e a Vercel sempre builda do zero, então isso nunca
+// afeta produção — é só higiene para quem roda o teste localmente.
+test('public/ termina a suíte reconstruído com o conteudo.json real', () => {
+  execFileSync('node', ['build.js'], { stdio: 'pipe' });
+  const html = readFileSync('public/index.html', 'utf8');
+  assert.ok(html.includes('Maquiagem Glam'), 'public/ não terminou a suíte com o conteúdo real');
 });
