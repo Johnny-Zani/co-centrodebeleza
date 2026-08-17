@@ -95,6 +95,17 @@ test('"$`", "$&" e "$\'" num detalhe não corrompem o HTML gerado', () => {
   assert.equal((saida.match(/<footer>/g) ?? []).length, 1, 'footer duplicado (template reinjetado via padrão "$")');
 });
 
+test('admin/index.html referencia admin.css e admin.js com caminho absoluto', () => {
+  // Caminho relativo ("admin.css") quebra em produção: com cleanUrls,
+  // acessar /admin (sem barra final) faz o navegador resolver o relativo
+  // contra a URL sem o último segmento, virando /admin.css (404) em vez de
+  // /admin/admin.css. Reproduzido ao vivo em 17/08 — painel carregava sem
+  // CSS nem JS (login não fazia nada).
+  const adminHtml = readFileSync('public/admin/index.html', 'utf8');
+  assert.ok(adminHtml.includes('href="/admin/admin.css"'), 'admin.css não está com caminho absoluto');
+  assert.ok(adminHtml.includes('src="/admin/admin.js"'), 'admin.js não está com caminho absoluto');
+});
+
 // Este arquivo é o último a rodar um build com CONTEUDO customizado (o
 // teste acima usa a fixture de caracteres especiais) — sem isso, quem
 // rodar "npm test" e depois quiser servir public/ localmente para
