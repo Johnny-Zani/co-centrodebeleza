@@ -1,16 +1,16 @@
 {
   "salao": {
-    "whatsapp": "",
-    "endereco": "",
-    "horarios": "",
+    "whatsapp": "16991466299",
+    "endereco": "Rua Maria José Nazar, 39 — Jardim Canadá, Batatais/SP",
+    "horarios": "Terça e quarta, 13h às 18h30 · Quinta, 9h às 11h e 13h às 18h30 · Sexta, 8h às 11h e 13h às 18h30 · Sábado, 6h às 11h30 e 13h30 às 17h · Domingo e segunda, fechado",
     "instagram": "c.ocentrodebeleza"
   },
   "profissionais": [
-    { "id": "caroline", "nome": "Caroline Giorgiutti", "funcao": "Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar", "foto": null },
+    { "id": "caroline", "nome": "Caroline Georgiutti", "funcao": "Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar", "foto": "fotos/caroline-georgiutti.jpg" },
     { "id": "bruna", "nome": "Bruna Vital", "funcao": "Maquiadora · Design de Sobrancelha · Bronzeamento Artificial", "foto": "fotos/bruna-vital.jpg" },
     { "id": "rafaela", "nome": "Rafaela Reis", "funcao": "Cabelos · Maquiadora", "foto": "fotos/rafaela-reis.jpg" },
-    { "id": "leticia", "nome": "Letícia Marquezam", "funcao": "Manicure · Pedicure · Cabelo", "foto": "fotos/leticia-santos.jpg" },
-    { "id": "cauane", "nome": "Cauane Carvalho", "funcao": "Maquiadora", "foto": null }
+    { "id": "leticia", "nome": "Letícia Santos", "funcao": "Manicure · Pedicure · Cabelo", "foto": "fotos/leticia-santos.jpg" },
+    { "id": "cauane", "nome": "Cauane Carvalho", "funcao": "Maquiadora", "foto": "fotos/cauane-carvalho.jpg" }
   ],
   "categorias": [
     {
