@@ -71,7 +71,10 @@
 
   /* ── HERO ── */
   #hero {
-    height: 100vh; display: flex; align-items: center; justify-content: center;
+    height: 100vh; /* fallback pra navegadores sem suporte a svh */
+    height: 100svh; /* exclui a área da barra de endereço do navegador no celular */
+    min-height: 560px;
+    display: flex; align-items: center; justify-content: center;
     background: var(--onyx);
     position: relative; overflow: hidden;
   }
@@ -141,7 +144,8 @@
     to { opacity: 1; transform: scale(1); }
   }
   .hero-logo-svg {
-    width: clamp(220px, 30vw, 380px);
+    width: clamp(180px, 30vw, 380px);
+    aspect-ratio: 1 / 1;
     filter: drop-shadow(0 0 28px rgba(201,169,110,0.45));
   }
 
