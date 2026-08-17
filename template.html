@@ -71,12 +71,12 @@
 
   /* ── HERO ── */
   #hero {
-    height: 100vh; /* fallback pra navegadores sem suporte a svh */
-    height: 100svh; /* exclui a área da barra de endereço do navegador no celular */
-    min-height: 560px;
+    min-height: 100vh; /* fallback pra navegadores sem suporte a svh */
+    min-height: 100svh; /* exclui a área da barra de endereço do navegador no celular */
     display: flex; align-items: center; justify-content: center;
     background: var(--onyx);
     position: relative; overflow: hidden;
+    padding: 40px 0;
   }
   .hero-bg {
     position: absolute; inset: 0;
