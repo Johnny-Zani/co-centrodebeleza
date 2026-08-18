@@ -20,9 +20,9 @@ test('tem 5 tratamentos, 3 pacotes de noiva e 5 profissionais', () => {
   assert.equal(conteudo.profissionais.length, 5);
 });
 
-test('20 serviços, 5 tratamentos, 3 pacotes de noiva e 5 profissionais já têm foto', () => {
+test('23 serviços, 5 tratamentos, 3 pacotes de noiva e 5 profissionais já têm foto', () => {
   const comFoto = l => l.filter(i => i.foto !== null).length;
-  assert.equal(comFoto(conteudo.categorias.flatMap(c => c.servicos)), 20);
+  assert.equal(comFoto(conteudo.categorias.flatMap(c => c.servicos)), 23);
   assert.equal(comFoto(conteudo.tratamentos), 5);
   assert.equal(comFoto(conteudo.profissionais), 5);
   assert.equal(comFoto(conteudo.noiva), 3);
