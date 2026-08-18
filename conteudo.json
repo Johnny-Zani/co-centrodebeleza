@@ -10,7 +10,7 @@
       "id": "caroline",
       "nome": "Caroline Georgiutti",
       "funcao": "Analista em Coloração Pessoal · Cabeleireira com Estratégia em Visagismo · Terapeuta Capilar",
-      "foto": "fotos/caroline-georgiutti.jpg"
+      "foto": "fotos/caroline.jpg"
     },
     {
       "id": "bruna",
@@ -139,8 +139,8 @@
           "id": "combo-retoque-curto",
           "nome": "Combo Retoque Cabelo Curto",
           "detalhe": "Luzes · Matização · Tratamento L'ANZA · Ozônio · Corte · Finalização",
-          "preco": 450,
-          "foto": "fotos/combo-retoque-luzes.jpg"
+          "preco": 550,
+          "foto": "fotos/combo-retoque-curto.jpg"
         },
         {
           "id": "combo-luzes-grande",
@@ -180,21 +180,21 @@
           "nome": "Spá das Sobrancelhas",
           "detalhe": "Esfoliação · Máscara de argila · Estimula o crescimento",
           "preco": 30,
-          "foto": null
+          "foto": "fotos/spa-sobrancelhas.jpg"
         },
         {
           "id": "buco",
           "nome": "Buço",
           "detalhe": null,
           "preco": 15,
-          "foto": null
+          "foto": "fotos/buco.jpg"
         },
         {
           "id": "depilacao-rosto",
           "nome": "Depilação Rosto",
           "detalhe": "Valor conforme quantidade de pelo",
           "preco": 45,
-          "foto": null
+          "foto": "fotos/depilacao-rosto.jpg"
         }
       ]
     }
@@ -208,7 +208,7 @@
       "preco": 180,
       "preco_avulsa": 90,
       "avulsa_label": "Avulsa",
-      "foto": "fotos/protocolo-ozonioterapia.jpg"
+      "foto": "fotos/protocolo-ozonio.jpg"
     },
     {
       "id": "protocolo-wella",
@@ -218,7 +218,7 @@
       "preco": 200,
       "preco_avulsa": 90,
       "avulsa_label": "Avulsa c/ escova",
-      "foto": "fotos/protocolo-nutricao-wella.jpg"
+      "foto": "fotos/protocolo-wella.jpg"
     },
     {
       "id": "protocolo-dark-oil",
@@ -228,7 +228,7 @@
       "preco": 280,
       "preco_avulsa": 120,
       "avulsa_label": "Avulsa",
-      "foto": "fotos/protocolo-dark-oil-sebastian.jpg"
+      "foto": "fotos/protocolo-dark-oil.jpg"
     },
     {
       "id": "protocolo-lanza-keratin",
@@ -256,7 +256,7 @@
       "id": "noiva-essencial",
       "nome": "Pacote 01 · Essencial",
       "preco": 600,
-      "foto": null,
+      "foto": "fotos/noiva-essencial.jpg",
       "itens": [
         "Make com Cílios",
         "Design de Sobrancelha",
@@ -270,7 +270,7 @@
       "id": "noiva-premium",
       "nome": "Pacote 02 · Premium",
       "preco": 1200,
-      "foto": null,
+      "foto": "fotos/noiva-premium.jpg",
       "itens": [
         "Make com Cílios",
         "Penteado com Preparação",
@@ -286,7 +286,7 @@
       "id": "noiva-luxo",
       "nome": "Pacote 03 · Luxo",
       "preco": 1600,
-      "foto": null,
+      "foto": "fotos/noiva-luxo.jpg",
       "itens": [
         "Make com Cílios",
         "Penteado com Preparação",
