@@ -36,7 +36,7 @@ test('tem dados estruturados de HairSalon', () => {
   assert.equal(dados['@type'], 'HairSalon');
   assert.equal(dados.name, 'C.O. Centro de Beleza');
   assert.ok(Array.isArray(dados.makesOffer));
-  assert.equal(dados.makesOffer.length, 23);
+  assert.equal(dados.makesOffer.length, 27);
 });
 
 test('endereço, horário e telefone entram nos dados estruturados quando existem', () => {

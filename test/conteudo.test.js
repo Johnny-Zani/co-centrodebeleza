@@ -9,9 +9,9 @@ test('conteudo.json passa na validação', () => {
   assert.deepEqual(validar(conteudo, p => existsSync(p)), []);
 });
 
-test('tem 23 serviços em 5 categorias', () => {
-  assert.equal(conteudo.categorias.length, 5);
-  assert.equal(conteudo.categorias.flatMap(c => c.servicos).length, 23);
+test('tem 27 serviços em 6 categorias', () => {
+  assert.equal(conteudo.categorias.length, 6);
+  assert.equal(conteudo.categorias.flatMap(c => c.servicos).length, 27);
 });
 
 test('tem 5 tratamentos, 3 pacotes de noiva e 5 profissionais', () => {
@@ -20,7 +20,7 @@ test('tem 5 tratamentos, 3 pacotes de noiva e 5 profissionais', () => {
   assert.equal(conteudo.profissionais.length, 5);
 });
 
-test('23 serviços, 5 tratamentos, 3 pacotes de noiva e 5 profissionais já têm foto', () => {
+test('23 serviços com foto, 5 tratamentos com foto, 5 profissionais com foto, 3 pacotes com foto', () => {
   const comFoto = l => l.filter(i => i.foto !== null).length;
   assert.equal(comFoto(conteudo.categorias.flatMap(c => c.servicos)), 23);
   assert.equal(comFoto(conteudo.tratamentos), 5);

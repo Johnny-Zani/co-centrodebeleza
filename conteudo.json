@@ -185,6 +185,40 @@
       ]
     },
     {
+      "nome": "Procedimentos Capilares Premium",
+      "servicos": [
+        {
+          "id": "botox-capilar",
+          "nome": "Botox Capilar",
+          "detalhe": "Alisa, reconstrói e seala cabelos sem formol",
+          "preco": 150,
+          "foto": null
+        },
+        {
+          "id": "selante-capilar",
+          "nome": "Selante Capilar",
+          "detalhe": "Proteção e brilho intenso sem formol",
+          "preco": 120,
+          "foto": null
+        },
+        {
+          "id": "progressiva",
+          "nome": "Progressiva",
+          "detalhe": "Alisa de forma progressiva, todos sem formol",
+          "preco": 180,
+          "foto": null
+        },
+        {
+          "id": "alisamento-profissional",
+          "nome": "Alisamento Profissional",
+          "detalhe": "Cabelos curtos a médios (120 a 170) · Cabelos longos (180 a 200)",
+          "preco": 150,
+          "preco_nota": "Podendo alterar o valor dependendo do tamanho e quantidade de cabelo",
+          "foto": null
+        }
+      ]
+    },
+    {
       "nome": "Sobrancelhas & Estética",
       "servicos": [
         {

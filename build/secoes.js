@@ -12,6 +12,7 @@ function moldura(foto, alt) {
 }
 
 function preco(valor) {
+  if (valor === null || valor === undefined) return '';
   const txt = formatarPreco(valor);
   const [prefixo, valorTxt] = [txt.slice(0, 'a partir de'.length), txt.slice('a partir de '.length)];
   return `<div class="preco"><small>${prefixo}</small><strong>${valorTxt}</strong></div>`;
@@ -44,6 +45,7 @@ export function secaoServicos(c) {
           <div class="servico-nome">${esc(s.nome)}</div>
           ${s.detalhe ? `<div class="servico-detalhe">${esc(s.detalhe)}</div>` : ''}
           ${preco(s.preco)}
+          ${s.preco_nota ? `<div class="preco-nota">${esc(s.preco_nota)}</div>` : ''}
           ${botaoAgendar(c, s.nome)}
         </div>
       </div>`).join('');
