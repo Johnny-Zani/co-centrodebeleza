@@ -9,9 +9,9 @@ test('conteudo.json passa na validação', () => {
   assert.deepEqual(validar(conteudo, p => existsSync(p)), []);
 });
 
-test('tem 27 serviços em 6 categorias', () => {
+test('tem 28 serviços em 6 categorias', () => {
   assert.equal(conteudo.categorias.length, 6);
-  assert.equal(conteudo.categorias.flatMap(c => c.servicos).length, 27);
+  assert.equal(conteudo.categorias.flatMap(c => c.servicos).length, 28);
 });
 
 test('tem 5 tratamentos, 3 pacotes de noiva e 5 profissionais', () => {

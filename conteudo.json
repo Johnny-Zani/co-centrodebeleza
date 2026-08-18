@@ -209,11 +209,17 @@
           "foto": null
         },
         {
-          "id": "alisamento-profissional",
+          "id": "alisamento-curto-medio",
           "nome": "Alisamento Profissional",
-          "detalhe": "Cabelos curtos a médios (120 a 170) · Cabelos longos (180 a 200)",
-          "preco": 150,
-          "preco_nota": "Podendo alterar o valor dependendo do tamanho e quantidade de cabelo",
+          "detalhe": "Cabelos curtos a médios",
+          "preco": 145,
+          "foto": null
+        },
+        {
+          "id": "alisamento-longo",
+          "nome": "Alisamento Profissional",
+          "detalhe": "Cabelos longos",
+          "preco": 190,
           "foto": null
         }
       ]
