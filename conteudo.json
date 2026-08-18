@@ -166,21 +166,21 @@
           "nome": "Manicure",
           "detalhe": "Cuidado completo para as mãos",
           "preco": 30,
-          "foto": null
+          "foto": "fotos/manicure.jpg"
         },
         {
           "id": "pedicure",
           "nome": "Pedicure",
           "detalhe": "Cuidado completo para os pés",
           "preco": 35,
-          "foto": null
+          "foto": "fotos/pedicure.jpg"
         },
         {
           "id": "spa-dos-pes",
           "nome": "Spa dos Pés",
           "detalhe": null,
           "preco": 55,
-          "foto": null
+          "foto": "fotos/spa-dos-pes.jpg"
         }
       ]
     },
