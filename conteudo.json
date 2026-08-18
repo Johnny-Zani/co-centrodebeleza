@@ -159,6 +159,32 @@
       ]
     },
     {
+      "nome": "Manicure & Pedicure",
+      "servicos": [
+        {
+          "id": "manicure",
+          "nome": "Manicure",
+          "detalhe": "Cuidado completo para as mãos",
+          "preco": 30,
+          "foto": null
+        },
+        {
+          "id": "pedicure",
+          "nome": "Pedicure",
+          "detalhe": "Cuidado completo para os pés",
+          "preco": 35,
+          "foto": null
+        },
+        {
+          "id": "spa-dos-pes",
+          "nome": "Spa dos Pés",
+          "detalhe": null,
+          "preco": 55,
+          "foto": null
+        }
+      ]
+    },
+    {
       "nome": "Sobrancelhas & Estética",
       "servicos": [
         {
