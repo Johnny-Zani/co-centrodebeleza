@@ -51,6 +51,7 @@ export function secaoServicos(c) {
       </div>`).join('');
     return `<div class="cat-block reveal">
       <p class="cat-label">${esc(cat.nome)}</p>
+      ${cat.nota ? `<p class="cat-nota">${esc(cat.nota)}</p>` : ''}
       <div class="servico-grid">${itens}</div>
     </div>`;
   }).join('');
