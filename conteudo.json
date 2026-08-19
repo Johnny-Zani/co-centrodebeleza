@@ -213,14 +213,14 @@
           "nome": "Alisamento Profissional",
           "detalhe": "Cabelos curtos a médios",
           "preco": 140,
-          "foto": null
+          "foto": "fotos/alisamento-curto-medio.jpg"
         },
         {
           "id": "alisamento-longo",
           "nome": "Alisamento Profissional",
           "detalhe": "Cabelos longos",
           "preco": 190,
-          "foto": null
+          "foto": "fotos/alisamento-longo.jpg"
         }
       ]
     },
