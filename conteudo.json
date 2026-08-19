@@ -192,21 +192,21 @@
           "nome": "Botox Capilar",
           "detalhe": "Alisa, reconstrói e seala cabelos sem formol",
           "preco": 150,
-          "foto": null
+          "foto": "fotos/botox-capilar.jpg"
         },
         {
           "id": "selante-capilar",
           "nome": "Selante Capilar",
           "detalhe": "Proteção e brilho intenso sem formol",
           "preco": 120,
-          "foto": null
+          "foto": "fotos/selante-capilar.jpg"
         },
         {
           "id": "progressiva",
           "nome": "Progressiva",
           "detalhe": "Alisa de forma progressiva, todos sem formol",
           "preco": 180,
-          "foto": null
+          "foto": "fotos/progressiva.jpg"
         },
         {
           "id": "alisamento-curto-medio",
