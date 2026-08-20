@@ -14,6 +14,21 @@ export function validar(conteudo, arquivoExiste) {
   if (!conteudo.salao || typeof conteudo.salao !== 'object') {
     errosDeForma.push('conteudo.json.salao precisa ser um objeto');
   }
+  if (conteudo.historia !== undefined) {
+    if (!conteudo.historia || typeof conteudo.historia !== 'object') {
+      errosDeForma.push('conteudo.json.historia precisa ser um objeto');
+    } else {
+      if (!Array.isArray(conteudo.historia.abertura)) {
+        errosDeForma.push('conteudo.json.historia.abertura precisa ser uma lista');
+      }
+      if (!Array.isArray(conteudo.historia.paragrafos)) {
+        errosDeForma.push('conteudo.json.historia.paragrafos precisa ser uma lista');
+      }
+      if (!Array.isArray(conteudo.historia.destaque)) {
+        errosDeForma.push('conteudo.json.historia.destaque precisa ser uma lista');
+      }
+    }
+  }
   if (!Array.isArray(conteudo.profissionais)) {
     errosDeForma.push('conteudo.json.profissionais precisa ser uma lista');
   }
@@ -36,6 +51,23 @@ export function validar(conteudo, arquivoExiste) {
 
   const erros = [];
   const idsVistos = new Set();
+
+  if (conteudo.historia) {
+    const h = conteudo.historia;
+    for (const campo of ['titulo', 'nome', 'foto', 'foto_alt']) {
+      if (typeof h[campo] !== 'string' || h[campo].trim() === '') {
+        erros.push(`historia.${campo} precisa ser um texto preenchido`);
+      }
+    }
+    for (const campo of ['abertura', 'paragrafos', 'destaque']) {
+      if (h[campo].some(texto => typeof texto !== 'string' || texto.trim() === '')) {
+        erros.push(`historia.${campo} precisa conter apenas textos preenchidos`);
+      }
+    }
+    if (typeof h.foto === 'string' && h.foto && !arquivoExiste(h.foto)) {
+      erros.push(`historia: foto "${h.foto}" não existe no disco`);
+    }
+  }
 
   const itens = [
     ...conteudo.profissionais.map(p => ['profissional', p]),

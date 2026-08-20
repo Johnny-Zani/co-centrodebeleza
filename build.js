@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'node:fs';
 import { validar } from './build/validar.js';
-import { secaoProfissionais, secaoServicos, secaoTratamentos, secaoNoiva, secaoCta } from './build/secoes.js';
+import { secaoHistoria, secaoProfissionais, secaoServicos, secaoTratamentos, secaoNoiva, secaoCta } from './build/secoes.js';
 import { metaTags } from './build/meta.js';
 
 const ARQUIVO = process.env.CONTEUDO ?? 'conteudo.json';
@@ -34,6 +34,7 @@ if (!conteudo.salao.whatsapp) {
 // string literal, sem interpretar "$".
 const html = readFileSync('template.html', 'utf8')
   .replace('<!--{{META}}-->', () => metaTags(conteudo, URL_BASE))
+  .replace('<!--{{HISTORIA}}-->', () => secaoHistoria(conteudo))
   .replace('<!--{{PROFISSIONAIS}}-->', () => secaoProfissionais(conteudo))
   .replace('<!--{{SERVICOS}}-->', () => secaoServicos(conteudo))
   .replace('<!--{{TRATAMENTOS}}-->', () => secaoTratamentos(conteudo))

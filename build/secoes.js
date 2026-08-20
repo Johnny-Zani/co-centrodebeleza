@@ -18,6 +18,39 @@ function preco(valor) {
   return `<div class="preco"><small>${prefixo}</small><strong>${valorTxt}</strong></div>`;
 }
 
+export function secaoHistoria(c) {
+  if (!c.historia) return '';
+
+  const h = c.historia;
+  const abertura = h.abertura.map(p => `<p>${esc(p)}</p>`).join('');
+  const paragrafos = h.paragrafos.map(p => `<p>${esc(p)}</p>`).join('');
+  const destaque = h.destaque.map(linha => `<span>${esc(linha)}</span>`).join('');
+
+  return `
+  <div class="historia-shell">
+    <figure class="historia-visual reveal">
+      <div class="historia-foto">
+        <img src="${esc(h.foto)}" alt="${esc(h.foto_alt)}" loading="lazy" width="640" height="640">
+      </div>
+      <figcaption>${esc(h.nome)} · Fundadora</figcaption>
+    </figure>
+    <div class="historia-conteudo reveal">
+      <p class="section-eyebrow">Nossa história</p>
+      <h2 class="section-title">${esc(h.titulo)}</h2>
+      <div class="historia-abertura">${abertura}</div>
+      <blockquote class="historia-destaque">${destaque}</blockquote>
+      <details class="historia-completa">
+        <summary>
+          <span class="historia-abrir">Conheça a história completa</span>
+          <span class="historia-fechar">Recolher história</span>
+        </summary>
+        <div class="historia-texto">${paragrafos}</div>
+      </details>
+      <p class="historia-assinatura">${esc(h.nome)}</p>
+    </div>
+  </div>`;
+}
+
 export function secaoProfissionais(c) {
   const cards = c.profissionais.map(p => `
     <div class="prof-card${p.foto ? ' tem-foto' : ''}">

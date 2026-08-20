@@ -30,6 +30,15 @@ test('todo tratamento, pacote de noiva e profissional aparece no HTML', () => {
   }
 });
 
+test('a história da Caroline aparece completa e com a foto própria', () => {
+  assert.ok(html.includes(esc(conteudo.historia.titulo)), 'título da história sumiu do HTML');
+  for (const paragrafo of [...conteudo.historia.abertura, ...conteudo.historia.paragrafos]) {
+    assert.ok(html.includes(esc(paragrafo)), 'um parágrafo da história sumiu do HTML');
+  }
+  assert.ok(html.includes(esc(conteudo.historia.foto)), 'foto da história sumiu do HTML');
+  assert.ok(existsSync('public/' + conteudo.historia.foto), 'foto da história não foi copiada');
+});
+
 test('todo preço aparece com "a partir de"', () => {
   // O card separa as duas metades (<small>a partir de</small><strong>R$ …</strong>),
   // então a comparação é por contagem: um prefixo para cada valor exibido.

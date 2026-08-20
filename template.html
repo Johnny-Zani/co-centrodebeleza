@@ -197,6 +197,7 @@
   .btn-ghost:hover { border-color: var(--gold); color: #fff; background: rgba(201,169,110,0.08); }
 
   section { padding: 100px 48px; }
+  section[id] { scroll-margin-top: 72px; }
   .section-eyebrow {
     font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
     color: var(--gold); margin-bottom: 16px;
@@ -213,6 +214,133 @@
     max-width: 500px;
   }
   .section-header { margin-bottom: 60px; }
+
+  /* ── HISTÓRIA ── */
+  #historia {
+    background: #F2ECE5;
+    position: relative;
+    overflow: hidden;
+  }
+  #historia::before {
+    content: '';
+    position: absolute;
+    width: 420px; height: 420px;
+    border: 1px solid rgba(201,169,110,0.14);
+    border-radius: 50%;
+    top: -210px; right: -140px;
+    pointer-events: none;
+  }
+  .historia-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(48px, 7vw, 100px);
+    align-items: start;
+  }
+  .historia-visual {
+    position: sticky;
+    top: 108px;
+  }
+  .historia-foto {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 22px 22px 0 rgba(201,169,110,0.13);
+  }
+  .historia-foto::after {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(255,255,255,0.5);
+    pointer-events: none;
+  }
+  .historia-foto img {
+    width: 100%; height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  .historia-visual figcaption {
+    margin-top: 32px;
+    color: var(--muted);
+    font-size: 0.64rem;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+  }
+  .historia-conteudo .section-title {
+    max-width: 620px;
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    margin-bottom: 32px;
+  }
+  .historia-abertura,
+  .historia-texto {
+    display: grid;
+    gap: 18px;
+  }
+  .historia-abertura p,
+  .historia-texto p {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: #5D5853;
+  }
+  .historia-abertura p:first-child::first-letter {
+    float: left;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.2rem;
+    line-height: .72;
+    color: var(--gold);
+    padding: 12px 8px 0 0;
+  }
+  .historia-destaque {
+    margin: 36px 0;
+    padding: 8px 0 8px 28px;
+    border-left: 1px solid var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--onyx);
+  }
+  .historia-destaque span { display: block; }
+  .historia-destaque span + span { margin-top: 8px; }
+  .historia-completa summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    list-style: none;
+    color: var(--onyx);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gold);
+  }
+  .historia-completa summary::-webkit-details-marker { display: none; }
+  .historia-completa summary::after {
+    content: '+';
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .historia-completa[open] summary::after { content: '−'; }
+  .historia-fechar { display: none; }
+  .historia-completa[open] .historia-abrir { display: none; }
+  .historia-completa[open] .historia-fechar { display: inline; }
+  .historia-texto {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(201,169,110,0.25);
+  }
+  .historia-assinatura {
+    margin-top: 36px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--gold);
+  }
 
   /* ── PROFISSIONAIS ── */
   #profissionais { background: var(--onyx); }
@@ -429,6 +557,17 @@
     footer { padding: 32px 20px; }
     #instagram { padding: 60px 20px; }
     #cta { padding: 60px 20px; }
+    .historia-shell { grid-template-columns: 1fr; gap: 54px; }
+    .historia-visual {
+      position: relative;
+      top: auto;
+      width: min(100%, 440px);
+      margin: 0 auto;
+    }
+    .historia-foto { box-shadow: 12px 12px 0 rgba(201,169,110,0.13); }
+    .historia-visual figcaption { margin-top: 24px; }
+    .historia-conteudo .section-title { font-size: clamp(2.4rem, 13vw, 3.4rem); }
+    .historia-destaque { padding-left: 20px; }
   }
 
   /* ── MOLDURA 3:4 — todas as fotos do site são retrato ── */
@@ -538,6 +677,7 @@
 <nav>
   <div class="nav-logo">C.O. Centro de Beleza</div>
   <div class="nav-links" id="nav-links">
+    <a href="#historia">História</a>
     <a href="#servicos">Serviços</a>
     <a href="#tratamentos">Tratamentos</a>
     <a href="#noiva">Noiva</a>
@@ -569,6 +709,13 @@
       <a href="#servicos" class="btn-ghost">Ver Serviços</a>
     </div>
   </div>
+</section>
+
+<div class="gold-line"></div>
+
+<!-- HISTÓRIA -->
+<section id="historia">
+  <!--{{HISTORIA}}-->
 </section>
 
 <div class="gold-line"></div>

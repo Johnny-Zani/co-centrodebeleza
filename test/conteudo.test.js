@@ -9,6 +9,13 @@ test('conteudo.json passa na validação', () => {
   assert.deepEqual(validar(conteudo, p => existsSync(p)), []);
 });
 
+test('a história da Caroline tem texto completo e foto', () => {
+  assert.equal(conteudo.historia.nome, 'Caroline Georgiutti');
+  assert.ok(conteudo.historia.abertura.length >= 2);
+  assert.ok(conteudo.historia.paragrafos.length >= 10);
+  assert.ok(existsSync(conteudo.historia.foto));
+});
+
 test('tem 28 serviços em 6 categorias', () => {
   assert.equal(conteudo.categorias.length, 6);
   assert.equal(conteudo.categorias.flatMap(c => c.servicos).length, 28);

@@ -69,6 +69,20 @@ test('foto null é válida', () => {
   assert.deepEqual(validar(conteudoMinimo(), () => false), []);
 });
 
+test('foto inexistente da história é erro', () => {
+  const c = conteudoMinimo();
+  c.historia = {
+    titulo: 'Minha história',
+    nome: 'Caroline Georgiutti',
+    foto: 'fotos/historia-inexistente.png',
+    foto_alt: 'Caroline',
+    abertura: ['Abertura'],
+    paragrafos: ['Continuação'],
+    destaque: ['Destaque']
+  };
+  assert.match(validar(c, () => false)[0], /historia-inexistente\.png/);
+});
+
 test('whatsapp com caracteres não numéricos é erro', () => {
   const c = conteudoMinimo();
   c.salao.whatsapp = '(11) 99999-9999';
