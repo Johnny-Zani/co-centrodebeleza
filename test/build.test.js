@@ -115,6 +115,17 @@ test('admin/index.html referencia admin.css e admin.js com caminho absoluto', ()
   assert.ok(adminHtml.includes('src="/admin/admin.js"'), 'admin.js não está com caminho absoluto');
 });
 
+test('catalogos em PDF (Noiva, Beleza 2026, cabelo, bronzeamento) são copiados pra public/', () => {
+  // catalogos/ não é lido do conteudo.json (a Eva manda esses arquivos
+  // direto por WhatsApp, ver CO-CENTRO-BELEZA) — só precisa sobreviver ao
+  // build, igual admin/. Sem esse cpSync, o próximo build (inclusive o da
+  // Carol pelo painel) apaga a pasta inteira porque public/ é recriado do
+  // zero a cada vez.
+  for (const arquivo of ['dia-da-noiva.pdf', 'catalogo-beleza-2026.pdf', 'cabelo-caroline.pdf', 'bronzeamento-cinnamon.pdf']) {
+    assert.ok(existsSync('public/catalogos/' + arquivo), `catálogo não copiado: ${arquivo}`);
+  }
+});
+
 // Este arquivo é o último a rodar um build com CONTEUDO customizado (o
 // teste acima usa a fixture de caracteres especiais) — sem isso, quem
 // rodar "npm test" e depois quiser servir public/ localmente para

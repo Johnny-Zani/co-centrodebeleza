@@ -47,5 +47,6 @@ writeFileSync('public/index.html', html);
 cpSync('fotos', 'public/fotos', { recursive: true });
 cpSync('conteudo.json', 'public/conteudo.json');
 if (existsSync('admin')) cpSync('admin', 'public/admin', { recursive: true });
+if (existsSync('catalogos')) cpSync('catalogos', 'public/catalogos', { recursive: true });
 
 console.log('✔ public/index.html gerado');
